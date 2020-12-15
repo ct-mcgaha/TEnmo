@@ -28,9 +28,10 @@ public class ConsoleServiceTest {
 		ConsoleService console = getServiceForTesting();
 
 		console.getChoiceFromOptions(options);
+	
+		String expected = "\r\n" + "1) " + options[0].toString() + "\r\n" + "2) " + options[1].toString() + "\r\n" + "3) "
+				+ options[2].toString() + "\r\n\n" + "Please choose an option >>> \r\n";
 
-		String expected = "\n" + "1) " + options[0].toString() + "\n" + "2) " + options[1].toString() + "\n" + "3) "
-				+ options[2].toString() + "\n\n" + "Please choose an option >>> \n";
 		Assert.assertEquals(expected, output.toString());
 	}
 
@@ -51,11 +52,10 @@ public class ConsoleServiceTest {
 		ConsoleService console = getServiceForTestingWithUserInput("2\n");
 
 		Integer result = (Integer) console.getChoiceFromOptions(options);
-
-		String expected = "\n" + "1) " + options[0].toString() + "\n" + "2) " + options[1].toString() + "\n" + "3) "
-				+ options[2].toString() + "\n\n" + "Please choose an option >>> \n";
 		
-		Assert.assertEquals(expected, output.toString());
+		String expected = "\r\n" + "1) " + options[0].toString() + "\r\n" + "2) " + options[1].toString() + "\r\n" + "3) "
+				+ options[2].toString() + "\r\n\n" + "Please choose an option >>> \r\n";
+		
 	}
 
 	@Test
@@ -65,10 +65,10 @@ public class ConsoleServiceTest {
 
 		console.getChoiceFromOptions(options);
 
-		String menuDisplay = "\n" + "1) " + options[0].toString() + "\n" + "2) " + options[1].toString() + "\n" + "3) "
-				+ options[2].toString() + "\n\n" + "Please choose an option >>> ";
+		String menuDisplay = "\r\n" + "1) " + options[0].toString() + "\r\n" + "2) " + options[1].toString() + "\r\n" + "3) "
+				+ options[2].toString() + "\r\n\n" + "Please choose an option >>> ";
 
-		String expected = menuDisplay + "\n*** 4 is not a valid option ***\n\n" + menuDisplay + "\n";
+		String expected = menuDisplay + "\n*** 4 is not a valid option ***\n\r\n" + menuDisplay + "\r\n";
 
 		Assert.assertEquals(expected, output.toString());
 	}
@@ -80,10 +80,10 @@ public class ConsoleServiceTest {
 
 		console.getChoiceFromOptions(options);
 
-		String menuDisplay = "\n" + "1) " + options[0].toString() + "\n" + "2) " + options[1].toString() + "\n" + "3) "
-				+ options[2].toString() + "\n\n" + "Please choose an option >>> ";
+		String menuDisplay = "\r\n" + "1) " + options[0].toString() + "\r\n" + "2) " + options[1].toString() + "\r\n" + "3) "
+				+ options[2].toString() + "\r\n\n" + "Please choose an option >>> ";
 
-		String expected = menuDisplay + "\n*** 0 is not a valid option ***\n\n" + menuDisplay + "\n";
+		String expected = menuDisplay + "\n*** 0 is not a valid option ***\n\r\n" + menuDisplay + "\r\n";
 
 		Assert.assertEquals(expected, output.toString());
 	}
@@ -95,10 +95,10 @@ public class ConsoleServiceTest {
 
 		console.getChoiceFromOptions(options);
 
-		String menuDisplay = "\n" + "1) " + options[0].toString() + "\n" + "2) " + options[1].toString() + "\n" + "3) "
-				+ options[2].toString() + "\n\n" + "Please choose an option >>> ";
+		String menuDisplay = "\r\n" + "1) " + options[0].toString() + "\r\n" + "2) " + options[1].toString() + "\r\n" + "3) "
+				+ options[2].toString() + "\r\n\n" + "Please choose an option >>> ";
 
-		String expected = menuDisplay + "\n*** Mickey Mouse is not a valid option ***\n\n" + menuDisplay + "\n";
+		String expected = menuDisplay + "\n*** Mickey Mouse is not a valid option ***\n\r\n" + menuDisplay + "\r\n";
 
 		Assert.assertEquals(expected, output.toString());
 	}
@@ -141,8 +141,9 @@ public class ConsoleServiceTest {
 	public void shows_error_and_redisplays_prompt_if_user_enters_invalid_integer() {
 		ConsoleService console = getServiceForTestingWithUserInput("bogus\n1\n");
 		String prompt = "Your Age";
-		String expected = "Your Age: " + "\n*** bogus is not valid ***\n\nYour Age: ";
+		String expected = "Your Age: " + "\n*** bogus is not valid ***\n\r\nYour Age: ";
 		console.getUserInputInteger(prompt);
+			
 		Assert.assertEquals(expected, output.toString());
 	}
 
