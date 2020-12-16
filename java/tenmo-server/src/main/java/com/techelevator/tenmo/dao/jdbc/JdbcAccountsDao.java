@@ -19,6 +19,9 @@ public class JdbcAccountsDao implements AccountsDao {
 	public JdbcAccountsDao(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
+	
+	private String sqlJoinSender = "SELECT * FROM accounts JOIN transfers ON accounts.account_id = transfers.account_from";
+	private String sqlJoinReceiver = "SELECT * FROM accounts JOIN transfers ON accounts.account_id = transfers.account_to";
 
 	@Override
 	public List<Accounts> listAccounts() {
@@ -56,15 +59,17 @@ public class JdbcAccountsDao implements AccountsDao {
 	
 	/*
 	 *  This is a method that updates the SENDER'S account...
-	 *  It SUBTRACTS whatever the transfer amount is FROM the balance.
+	 *  It SUBTRACTS whatever the transfer amount is  the balance.
 	 *  I think we need to find a way for it intake "amount" from Transfers.java
 	 */
 	@Override
 	public Accounts updateSender(Accounts account, int accountId) {
-		String sendBucks = "UPDATE accounts \r\n" + 
-				"SET balance = (balance - transfers.amount)\r\n" + 
-				"FROM transfers\r\n" + 
-				"WHERE accounts.account_id = transfers.account_from";
+		String sendBucks = sqlJoinSender + "UPDATE accounts"+
+				"SET balance = (balance - transfers.amount)" + 
+				"FROM transfers" + 
+				"WHERE transfers.transfer_id = ?";
+		jdbcTemplate.update(sendBucks, account.getBalance(), account.getUserId(), accountId);
+		return account;
 	}
 	
 	/*
@@ -74,10 +79,12 @@ public class JdbcAccountsDao implements AccountsDao {
 	 */
 	@Override
 	public Accounts updateReceiver(Accounts account, int accountId) {
-		String sendBucks = "UPDATE accounts \r\n" + 
-				"SET balance = (balance + transfers.amount)\r\n" + 
-				"FROM transfers\r\n" + 
-				"WHERE accounts.account_id = transfers.account_to";
+		String receiveBucks = sqlJoinReceiver + "UPDATE accounts"+
+				"SET balance = (balance - transfers.amount)" + 
+				"FROM transfers" + 
+				"WHERE transfers.transfer_id = ?";
+		jdbcTemplate.update(receiveBucks, account.getBalance(), account.getUserId(), accountId);
+		return account;
 	}
 	
 	@Override
