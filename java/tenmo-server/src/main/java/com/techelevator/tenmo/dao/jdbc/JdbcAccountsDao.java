@@ -54,6 +54,19 @@ public class JdbcAccountsDao implements AccountsDao {
 		return account;
 	}
 	
+	@Override
+	public Accounts getAccountByTransferId(int transferId) {
+		Accounts transIdAccount = new Accounts();
+		String sql = "SELECT balance FROM accounts\r\n" + 
+				"JOIN transfers ON accounts.account_id = transfers.account_to\r\n" + 
+				"WHERE transfers.transfer_id = ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
+		if (results.next()) {
+			transIdAccount = mapRowToAccounts(results);
+		}
+		return transIdAccount;
+	}
+	
 	private Accounts mapRowToAccounts(SqlRowSet results) {
 		Accounts theAccount = new Accounts();
 		theAccount.setAccountId(results.getInt("account_id"));

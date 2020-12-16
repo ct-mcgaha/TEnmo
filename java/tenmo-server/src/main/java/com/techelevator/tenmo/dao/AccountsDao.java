@@ -15,4 +15,8 @@ public interface AccountsDao {
 	
 	Accounts updateAccount(Accounts account, int accountId);
 	
+	Accounts getAccountByTransferId(int transferId);
+	
+	
+	
 }

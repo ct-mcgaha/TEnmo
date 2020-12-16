@@ -21,8 +21,6 @@ public class Accounts {
 		this.balance = balance;
 	}
 
-
-
 	public int getAccountId() {
 		return accountId;
 	}
