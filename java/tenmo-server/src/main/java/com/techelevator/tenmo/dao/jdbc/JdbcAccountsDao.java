@@ -61,10 +61,9 @@ public class JdbcAccountsDao implements AccountsDao {
 	 */
 	@Override
 	public Accounts updateSender(Accounts account, int accountId) {
-		String sendBucks = "UPDATE accounts \r\n" + 
-				"SET balance = (balance - transfers.amount)\r\n" + 
-				"FROM transfers\r\n" + 
-				"WHERE accounts.account_id = transfers.account_from";
+		String sendBucks = "UPDATE accounts SET balance = (balance - transfers.amount) FROM transfers WHERE accounts.account_id = transfers.account_from";
+		jdbcTemplate.update(sendBucks, account.getBalance(), account.getUserId(), accountId);
+		return account;
 	}
 	
 	/*
@@ -74,10 +73,9 @@ public class JdbcAccountsDao implements AccountsDao {
 	 */
 	@Override
 	public Accounts updateReceiver(Accounts account, int accountId) {
-		String sendBucks = "UPDATE accounts \r\n" + 
-				"SET balance = (balance + transfers.amount)\r\n" + 
-				"FROM transfers\r\n" + 
-				"WHERE accounts.account_id = transfers.account_to";
+		String sendBucks = "UPDATE accounts SET balance = (balance + transfers.amount) FROM transfers WHERE accounts.account_id = transfers.account_to";
+		jdbcTemplate.update(sendBucks, account.getBalance(), account.getUserId(), accountId);
+		return account;
 	}
 	
 	@Override
