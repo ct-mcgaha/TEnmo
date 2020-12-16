@@ -53,6 +53,7 @@ public class JdbcTransfersDao implements TransfersDao{
 		// TODO Auto-generated method stub
 		return transfer;
 	}
+
 	
 	private Transfers mapRowToTransfers(SqlRowSet results) {
 		Transfers theTransfer = new Transfers();
@@ -64,7 +65,5 @@ public class JdbcTransfersDao implements TransfersDao{
 		theTransfer.setTransferStatusId(results.getLong("transfer_status_id"));
 		return theTransfer;
 	}
-
-	
 
 }

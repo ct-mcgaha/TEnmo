@@ -61,4 +61,17 @@ public class TenmoController {
 	public Transfers create(@RequestBody Transfers newTransfer) {
 		return transfersDao.addTransfer(newTransfer);
 	}
+<<<<<<< HEAD
+=======
+	
+	@RequestMapping(path = "/transfers", method = RequestMethod.PUT)
+	public Accounts sendBucks(@RequestBody Accounts sender, @PathVariable int id) {
+		return accountsDao.updateSender(sender, id);
+	}
+	
+//	@RequestMapping (path = "/accounts/{id}", method = RequestMethod.GET)
+//	public Accounts getAccountsByTranserID(@PathVariable int id) {
+//		return accountsDao.getAccountByTransferId(id);
+//	}
+>>>>>>> b51a402c8b84882fce7495b72261de9797d88230
 }
