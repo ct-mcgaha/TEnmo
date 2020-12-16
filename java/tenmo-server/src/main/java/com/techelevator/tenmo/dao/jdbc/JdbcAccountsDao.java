@@ -54,6 +54,32 @@ public class JdbcAccountsDao implements AccountsDao {
 		return account;
 	}
 	
+	/*
+	 *  This is a method that updates the SENDER'S account...
+	 *  It SUBTRACTS whatever the transfer amount is FROM the balance.
+	 *  I think we need to find a way for it intake "amount" from Transfers.java
+	 */
+	@Override
+	public Accounts updateSender(Accounts account, int accountId) {
+		String sendBucks = "UPDATE accounts \r\n" + 
+				"SET balance = (balance - transfers.amount)\r\n" + 
+				"FROM transfers\r\n" + 
+				"WHERE accounts.account_id = transfers.account_from";
+	}
+	
+	/*
+	 * 	This is a method that updates the RECEIVER'S account...
+	 *  It ADDS whatever the transfer amount is TO the balance.
+	 *  I think we need to find a way for it intake "amount" from Transfers.java
+	 */
+	@Override
+	public Accounts updateReceiver(Accounts account, int accountId) {
+		String sendBucks = "UPDATE accounts \r\n" + 
+				"SET balance = (balance + transfers.amount)\r\n" + 
+				"FROM transfers\r\n" + 
+				"WHERE accounts.account_id = transfers.account_to";
+	}
+	
 	@Override
 	public Accounts getAccountByTransferId(int transferId) {
 		Accounts transIdAccount = new Accounts();
