@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class Transfers {
 	private Long transferId;
 	private Long transferTypeId;
-	private Long trasnferStatusId;
+	private Long transferStatusId;
 	private Long accountFrom;
 	private Long accountTo;
 	private BigDecimal amount;
@@ -22,11 +22,11 @@ public class Transfers {
 	public void setTransferTypeId(Long transferTypeId) {
 		this.transferTypeId = transferTypeId;
 	}
-	public Long getTrasnferStatusId() {
-		return trasnferStatusId;
+	public Long getTransferStatusId() {
+		return transferStatusId;
 	}
-	public void setTrasnferStatusId(Long trasnferStatusId) {
-		this.trasnferStatusId = trasnferStatusId;
+	public void setTransferStatusId(Long transferStatusId) {
+		this.transferStatusId = transferStatusId;
 	}
 	public Long getAccountFrom() {
 		return accountFrom;

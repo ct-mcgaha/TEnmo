@@ -11,8 +11,8 @@ public interface AccountsDao {
 	
 	Accounts getAccount(int accountId);
 	
-	List<Accounts> findUser(int userId);
+//	List<Accounts> findUser(int userId);
 	
-	Accounts updateAccount(int userId, BigDecimal balance);
+	Accounts updateAccount(Accounts account, int accountId);
 	
 }
