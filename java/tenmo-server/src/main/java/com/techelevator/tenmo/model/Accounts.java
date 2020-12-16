@@ -8,6 +8,21 @@ public class Accounts {
 	private int userId;
 	private BigDecimal balance;
 	
+	public Accounts() {
+		
+	}
+	
+	
+	
+	public Accounts(int accountId, int userId, BigDecimal balance) {
+		super();
+		this.accountId = accountId;
+		this.userId = userId;
+		this.balance = balance;
+	}
+
+
+
 	public int getAccountId() {
 		return accountId;
 	}
