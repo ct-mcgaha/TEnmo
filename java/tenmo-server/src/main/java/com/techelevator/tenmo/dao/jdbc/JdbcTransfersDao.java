@@ -30,7 +30,6 @@ public class JdbcTransfersDao implements TransfersDao{
 			Transfers theTransfers = mapRowToTransfers(results);
 			allTransfers.add(theTransfers);
 		}
-		// TODO Auto-generated method stub
 		return allTransfers;
 	}
 
@@ -43,7 +42,6 @@ public class JdbcTransfersDao implements TransfersDao{
 		if (results.next()) {
 			oneTransfer = mapRowToTransfers(results);
 		}
-		// TODO Auto-generated method stub
 		return oneTransfer;
 	} 
 	
@@ -51,17 +49,14 @@ public class JdbcTransfersDao implements TransfersDao{
 	public Transfers addTransfer(Transfers transfer) {
 		String sqlAddTransfer = "INSERT INTO transfers(account_from, account_to, amount, transfer_type_id, transfer_status_id) VALUES (?,?,?,?,?)";
 		jdbcTemplate.update(sqlAddTransfer, transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount(), transfer.getTransferTypeId(), transfer.getTransferStatusId());
-		// TODO Auto-generated method stub
 		return transfer;
 	}
 	
 	
 	@Override
-	public void sendTransfer(long senderId, long recieverId, BigDecimal transferAmount) {
+	public void sendTransfer(long transferTypeId, long transferStatusId, long senderId, long recieverId, BigDecimal transferAmount) {
 		String sqlSendTransfer = "INSERT INTO transfers(transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES(?,?,?,?,?)";
-		jdbcTemplate.update(sqlSendTransfer, 2, 2, senderId, recieverId);
-		// TODO Auto-generated method stub
-		
+		jdbcTemplate.update(sqlSendTransfer, transferTypeId, transferStatusId, senderId, recieverId, transferAmount);
 	}
 
 	

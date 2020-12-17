@@ -20,8 +20,8 @@ public class JdbcAccountsDao implements AccountsDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 	
-	private String sqlJoinSender = "SELECT * FROM accounts JOIN transfers ON accounts.account_id = transfers.account_from";
-	private String sqlJoinReceiver = "SELECT * FROM accounts JOIN transfers ON accounts.account_id = transfers.account_to";
+//	private String sqlJoinSender = "SELECT * FROM accounts JOIN transfers ON accounts.account_id = transfers.account_from";
+//	private String sqlJoinReceiver = "SELECT * FROM accounts JOIN transfers ON accounts.account_id = transfers.account_to";
 
 	@Override
 	public List<Accounts> listAccounts() {
@@ -48,7 +48,6 @@ public class JdbcAccountsDao implements AccountsDao {
 		// TODO Auto-generated method stub
 		BigDecimal account = oneAccount.getBalance();
 		return account;
-		
 	}
 
 	@Override
@@ -57,6 +56,11 @@ public class JdbcAccountsDao implements AccountsDao {
 		jdbcTemplate.update(updateAccount, account.getBalance(), account.getUserId(), accountId);
 		// TODO Auto-generated method stub
 		return account;
+	}
+	
+	public void deleteAccount(long accountId) {
+		String sql = "DELETE FROM accounts WHERE account_id = ?";
+		jdbcTemplate.update(sql, accountId);
 	}
 	
 	/*
@@ -69,7 +73,6 @@ public class JdbcAccountsDao implements AccountsDao {
 	public void updateSender(BigDecimal amount, long senderId) {
 		String sendBucks = "UPDATE accounts SET balance = ? WHERE account_id = ?";
 		jdbcTemplate.update(sendBucks, getAccount(senderId).subtract(amount), senderId);
-		// TODO Auto-generated method stub
 	
 	}
 	
@@ -77,9 +80,8 @@ public class JdbcAccountsDao implements AccountsDao {
 	public void updateReceiver(BigDecimal amount, long receiverId) {
 		String sendBucks = "UPDATE accounts SET balance = ? WHERE account_id = ?";
 		jdbcTemplate.update(sendBucks, getAccount(receiverId).add(amount), receiverId);
-		// TODO Auto-generated method stub
-		
 	}
+
 	
 	/*
 	 * 	This is a method that updates the RECEIVER'S account...
@@ -97,7 +99,7 @@ public class JdbcAccountsDao implements AccountsDao {
 //	}
 	
 	@Override
-	public Accounts getAccountByTransferId(int transferId) {
+	public Accounts getAccountByTransferId(long transferId) {
 		Accounts transIdAccount = new Accounts();
 		String sql = "SELECT balance FROM accounts\r\n" + 
 				"JOIN transfers ON accounts.account_id = transfers.account_to\r\n" + 

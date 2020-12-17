@@ -15,12 +15,12 @@ public interface AccountsDao {
 	
 	Accounts updateAccount(Accounts account, long accountId);
 	
-	Accounts getAccountByTransferId(int transferId);
+	Accounts getAccountByTransferId(long transferId);
 
 	void updateSender(BigDecimal transferAmount, long senderId);
 
-	void updateReceiver(BigDecimal amount, long receiverId);
+	void updateReceiver(BigDecimal transferAmount, long receiverId);
 	
-	
+	void deleteAccount(long accountId);
 	
 }
