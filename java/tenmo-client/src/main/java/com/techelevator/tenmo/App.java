@@ -1,6 +1,7 @@
 package com.techelevator.tenmo;
 
 import java.math.BigDecimal;
+import java.util.Scanner;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.Transfers;
@@ -28,7 +29,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private static final String MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS = "View your pending requests";
 	private static final String MAIN_MENU_OPTION_LOGIN = "Login as different user";
 	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS, MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
-	//private static final String SEND_MENU_OPTION_CHOOSE_RECEIVER = "Enter the ID of the User you'd like to send";
+	private static final String SEND_MENU_OPTION_CHOOSE_RECEIVER = "Enter the ID of the User you'd like to send";
+	private static final String SEND_MENU_OPTION_CHOOSE_AMOUNT = "Enter amount";
 	
     private AuthenticatedUser currentUser;
     private ConsoleService console;
@@ -36,6 +38,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     private AccountsService accountsService;
     private TransfersService transfersService;
     private UserService userService;
+    private Scanner in;
 
     public static void main(String[] args) {
     	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
@@ -45,6 +48,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     public App(ConsoleService console, AuthenticationService authenticationService) {
 		this.console = console;
 		this.authenticationService = authenticationService;
+		in = new Scanner(System.in);
 		accountsService = new AccountsService(API_BASE_URL);
 		transfersService = new TransfersService(API_BASE_URL);
 		userService = new UserService(API_BASE_URL);
@@ -115,9 +119,43 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		for (int i = 0; i < users.length; i++) {
 		System.out.printf("%5d %-20s\n", users[i].getId(), users[i].getUsername());
 		}
-		System.out.println(
-				"---------\r\n" + 
-				"Enter ID of user you are sending to (0 to cancel):");
+//		System.out.println(
+//				"---------\r\n" + 
+//				"Enter ID of user you are sending to (0 to cancel):");
+		boolean choice = false;
+		while (choice == false) {
+			Integer nameId = (Integer)console.getUserInputInteger(SEND_MENU_OPTION_CHOOSE_RECEIVER);
+//			nameId = Integer.parseInt(in.nextLine());
+			if(nameId == 0) {
+				choice = true;
+				return;
+			} else {
+				for(User user : users) {
+					if (user.getId().equals(nameId)) {
+						choice = true;
+					}
+				} if (choice == false) {
+					System.out.println("Not a valid choice. Choose again");
+				}
+			}
+		}
+		
+		boolean sendAmount = false;
+		while (sendAmount = false) {
+			BigDecimal amount = console.getUserBigDecimal(SEND_MENU_OPTION_CHOOSE_RECEIVER);
+			if(amount.compareTo(BigDecimal.ZERO) == 0) {
+				System.out.println("Enter value above 0");
+				return;
+			} if (amount.compareTo(BigDecimal.ZERO) > 0) {
+//				transfersService.sendATransfer(currentUser.getUser().getId(), accountTo, amount);
+				BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId());
+				System.out.println("Current Balance: " + balance);
+				sendAmount = true;
+			} else {
+				System.out.println("Insufficient funds");
+			}
+			
+		}
 		// add another menu with choice (user id)
 			// choice = user id
 		// once RECEIVER selected,

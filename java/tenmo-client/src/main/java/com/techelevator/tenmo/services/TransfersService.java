@@ -1,5 +1,7 @@
 package com.techelevator.tenmo.services;
 
+import java.math.BigDecimal;
+
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
@@ -27,6 +29,18 @@ public class TransfersService {
 	    } catch (ResourceAccessException ex) {
 	    	System.out.println(ex.getMessage());
 	    }
+		return transfer;
+	}
+	
+	public Transfers sendATransfer(long accountFrom, long accountTo, BigDecimal amount) {
+		Transfers transfer = null;
+		try {
+			return restTemplate.getForObject(BASE_URL + "transfers/send", Transfers.class);
+		} catch (RestClientResponseException ex) {
+		      System.out.println(ex.getRawStatusCode() + " : " + ex.getStatusText());
+	    } catch (ResourceAccessException ex) {
+	    	System.out.println(ex.getMessage());
+	    } 
 		return transfer;
 	}
 }
