@@ -123,8 +123,9 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 //				"---------\r\n" + 
 //				"Enter ID of user you are sending to (0 to cancel):");
 		boolean choice = false;
+		Integer nameId = null;
 		while (choice == false) {
-			Integer nameId = (Integer)console.getUserInputInteger(SEND_MENU_OPTION_CHOOSE_RECEIVER);
+			 nameId = (Integer)console.getUserInputInteger(SEND_MENU_OPTION_CHOOSE_RECEIVER);
 //			nameId = Integer.parseInt(in.nextLine());
 			if(nameId == 0) {
 				choice = true;
@@ -140,14 +141,17 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			}
 		}
 		
+		
 		boolean sendAmount = false;
-		while (sendAmount = false) {
-			BigDecimal amount = console.getUserBigDecimal(SEND_MENU_OPTION_CHOOSE_RECEIVER);
+		while (sendAmount == false) {
+			BigDecimal amount = console.getUserBigDecimal(SEND_MENU_OPTION_CHOOSE_AMOUNT);
 			if(amount.compareTo(BigDecimal.ZERO) == 0) {
 				System.out.println("Enter value above 0");
 				return;
 			} if (amount.compareTo(BigDecimal.ZERO) > 0) {
-//				transfersService.sendATransfer(currentUser.getUser().getId(), accountTo, amount);
+				long transferTypeId = 2;
+				long transferStatusId = 2;
+				transfersService.sendTransfer(transferTypeId, transferStatusId, currentUser.getUser().getId(), nameId, amount);
 				BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId());
 				System.out.println("Current Balance: " + balance);
 				sendAmount = true;
