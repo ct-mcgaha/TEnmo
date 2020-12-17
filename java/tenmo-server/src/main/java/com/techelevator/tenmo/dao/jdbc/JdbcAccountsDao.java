@@ -37,7 +37,7 @@ public class JdbcAccountsDao implements AccountsDao {
 	}
 
 	@Override
-	public Accounts getAccount(int accountId) {
+	public BigDecimal getAccount(long accountId) {
 		Accounts oneAccount = new Accounts();
 		String sqlgetOneAccount = "SELECT * FROM accounts WHERE account_id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlgetOneAccount, accountId);
@@ -46,11 +46,13 @@ public class JdbcAccountsDao implements AccountsDao {
 			oneAccount = mapRowToAccounts(results);
 		}
 		// TODO Auto-generated method stub
-		return oneAccount;
+		BigDecimal account = oneAccount.getBalance();
+		return account;
+		
 	}
 
 	@Override
-	public Accounts updateAccount(Accounts account, int accountId) {
+	public Accounts updateAccount(Accounts account, long accountId) {
 		String updateAccount = "UPDATE accounts SET balance = ?, user_id = ? WHERE account_id = ?";
 		jdbcTemplate.update(updateAccount, account.getBalance(), account.getUserId(), accountId);
 		// TODO Auto-generated method stub
@@ -62,18 +64,21 @@ public class JdbcAccountsDao implements AccountsDao {
 	 *  It SUBTRACTS whatever the transfer amount is  the balance.
 	 *  I think we need to find a way for it intake "amount" from Transfers.java
 	 */
+	
 	@Override
-	public Accounts updateSender(Accounts account, int accountId) {
-<<<<<<< HEAD
-		String sendBucks = "UPDATE accounts SET balance = (balance - transfers.amount) FROM transfers WHERE accounts.account_id = transfers.account_from";
-=======
-		String sendBucks = sqlJoinSender + "UPDATE accounts"+
-				"SET balance = (balance - transfers.amount)" + 
-				"FROM transfers" + 
-				"WHERE transfers.transfer_id = ?";
->>>>>>> b51a402c8b84882fce7495b72261de9797d88230
-		jdbcTemplate.update(sendBucks, account.getBalance(), account.getUserId(), accountId);
-		return account;
+	public void updateSender(BigDecimal amount, long senderId) {
+		String sendBucks = "UPDATE accounts SET balance = ? WHERE account_id = ?";
+		jdbcTemplate.update(sendBucks, getAccount(senderId).subtract(amount), senderId);
+		// TODO Auto-generated method stub
+	
+	}
+	
+	@Override
+	public void updateReceiver(BigDecimal amount, long receiverId) {
+		String sendBucks = "UPDATE accounts SET balance = ? WHERE account_id = ?";
+		jdbcTemplate.update(sendBucks, getAccount(receiverId).add(amount), receiverId);
+		// TODO Auto-generated method stub
+		
 	}
 	
 	/*
@@ -81,20 +86,15 @@ public class JdbcAccountsDao implements AccountsDao {
 	 *  It ADDS whatever the transfer amount is TO the balance.
 	 *  I think we need to find a way for it intake "amount" from Transfers.java
 	 */
-	@Override
-	public Accounts updateReceiver(Accounts account, int accountId) {
-<<<<<<< HEAD
-		String sendBucks = "UPDATE accounts SET balance = (balance + transfers.amount) FROM transfers WHERE accounts.account_id = transfers.account_to";
-		jdbcTemplate.update(sendBucks, account.getBalance(), account.getUserId(), accountId);
-=======
-		String receiveBucks = sqlJoinReceiver + "UPDATE accounts"+
-				"SET balance = (balance - transfers.amount)" + 
-				"FROM transfers" + 
-				"WHERE transfers.transfer_id = ?";
-		jdbcTemplate.update(receiveBucks, account.getBalance(), account.getUserId(), accountId);
->>>>>>> b51a402c8b84882fce7495b72261de9797d88230
-		return account;
-	}
+//	@Override
+//	public Accounts updateReceiver(Accounts account, int accountId) {
+//		String receiveBucks = sqlJoinReceiver + "UPDATE accounts"+
+//				"SET balance = (balance - transfers.amount)" + 
+//				"FROM transfers" + 
+//				"WHERE transfers.transfer_id = ?";
+//		jdbcTemplate.update(receiveBucks, account.getBalance(), account.getUserId(), accountId);
+//		return account;
+//	}
 	
 	@Override
 	public Accounts getAccountByTransferId(int transferId) {
@@ -117,4 +117,6 @@ public class JdbcAccountsDao implements AccountsDao {
 		
 		return theAccount;
 	}
+
+
 }

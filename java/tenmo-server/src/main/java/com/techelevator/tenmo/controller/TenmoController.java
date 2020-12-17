@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -36,14 +37,25 @@ public class TenmoController {
 		return accountsDao.listAccounts();
 	}
 	
-	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.GET)
-	public Accounts getAccount(@PathVariable int id) {
+	@RequestMapping(path = "/accounts/{id}/balance", method = RequestMethod.GET)
+	public BigDecimal getAccount(@PathVariable int id) {
 		return accountsDao.getAccount(id);
 	}
 	
 	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.PUT)
 	public Accounts update(@RequestBody Accounts updatedAccount, @PathVariable int id) {
 		return accountsDao.updateAccount(updatedAccount, id);
+	}
+	
+	@RequestMapping(path = "/accounts/sendingMoney", method = RequestMethod.POST)
+	public void sendTransfer(@RequestBody Transfers sendTransfer) {
+		if (accountsDao.getAccount(sendTransfer.getAccountFrom()).compareTo(sendTransfer.getAmount()) > 0) {
+			transfersDao.sendTransfer(sendTransfer.getAccountFrom(), sendTransfer.getAccountTo(), sendTransfer.getAmount());
+			accountsDao.updateSender(sendTransfer.getAmount(), sendTransfer.getAccountFrom());
+			accountsDao.updateReceiver(sendTransfer.getAmount(), sendTransfer.getAccountTo());
+		} else {
+			System.out.println("Not enough funds");
+		}
 	}
 	
 	@RequestMapping(path = "/transfers", method = RequestMethod.GET)
@@ -56,22 +68,21 @@ public class TenmoController {
 		return transfersDao.getOne(id);
 	}
 	
+	
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(path = "/transfers", method = RequestMethod.POST)
 	public Transfers create(@RequestBody Transfers newTransfer) {
 		return transfersDao.addTransfer(newTransfer);
 	}
-<<<<<<< HEAD
-=======
 	
-	@RequestMapping(path = "/transfers", method = RequestMethod.PUT)
-	public Accounts sendBucks(@RequestBody Accounts sender, @PathVariable int id) {
-		return accountsDao.updateSender(sender, id);
-	}
+//	@RequestMapping(path = "/transfers", method = RequestMethod.PUT)
+//	public Accounts sendBucks(@RequestBody Accounts sender, @PathVariable int id) {
+//		return accountsDao.updateSender(sender, id);
+//	}
 	
 //	@RequestMapping (path = "/accounts/{id}", method = RequestMethod.GET)
 //	public Accounts getAccountsByTranserID(@PathVariable int id) {
 //		return accountsDao.getAccountByTransferId(id);
 //	}
->>>>>>> b51a402c8b84882fce7495b72261de9797d88230
+
 }

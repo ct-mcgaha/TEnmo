@@ -9,17 +9,17 @@ public interface AccountsDao {
 	
 	List<Accounts> listAccounts();
 	
-	Accounts getAccount(int accountId);
+	BigDecimal getAccount(long accountId);
 	
 //	List<Accounts> findUser(int userId);
 	
-	Accounts updateAccount(Accounts account, int accountId);
+	Accounts updateAccount(Accounts account, long accountId);
 	
 	Accounts getAccountByTransferId(int transferId);
 
-	Accounts updateSender(Accounts account, int accountId);
+	void updateSender(BigDecimal transferAmount, long senderId);
 
-	Accounts updateReceiver(Accounts account, int accountId);
+	void updateReceiver(BigDecimal amount, long receiverId);
 	
 	
 	

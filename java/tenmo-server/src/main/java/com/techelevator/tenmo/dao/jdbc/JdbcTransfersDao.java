@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.dao.jdbc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,17 +54,27 @@ public class JdbcTransfersDao implements TransfersDao{
 		// TODO Auto-generated method stub
 		return transfer;
 	}
+	
+	
+	@Override
+	public void sendTransfer(long senderId, long recieverId, BigDecimal transferAmount) {
+		String sqlSendTransfer = "INSERT INTO transfers(transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES(?,?,?,?,?)";
+		jdbcTemplate.update(sqlSendTransfer, 2, 2, senderId, recieverId);
+		// TODO Auto-generated method stub
+		
+	}
 
 	
 	private Transfers mapRowToTransfers(SqlRowSet results) {
 		Transfers theTransfer = new Transfers();
-		theTransfer.setAccountFrom(results.getLong("account_from"));
-		theTransfer.setAccountTo(results.getLong("account_to"));
-		theTransfer.setAmount(results.getBigDecimal("amount"));
 		theTransfer.setTransferId(results.getLong("transfer_id"));
 		theTransfer.setTransferTypeId(results.getLong("transfer_type_id"));
 		theTransfer.setTransferStatusId(results.getLong("transfer_status_id"));
+		theTransfer.setAccountFrom(results.getLong("account_from"));
+		theTransfer.setAccountTo(results.getLong("account_to"));
+		theTransfer.setAmount(results.getBigDecimal("amount"));
 		return theTransfer;
 	}
+
 
 }
