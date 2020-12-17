@@ -32,6 +32,19 @@ public class JdbcTransfersDao implements TransfersDao{
 		}
 		return allTransfers;
 	}
+	
+	@Override
+	public List<Transfers> getTransferForUser(long id) {
+		List<Transfers> allTransfersByUser = new ArrayList<>();
+		String sqlTransfersForUser = "SELECT * FROM transfers JOIN accounts ON transfers.account_to = accounts.account_id JOIN users ON accounts.user_id = users.user_id WHERE transfers.account_from = ? OR transfers.account_to = ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlTransfersForUser, id, id);
+		
+		while (results.next()) {
+			Transfers allTransfers = mapRowToTransfers(results);
+			allTransfersByUser.add(allTransfers);
+		}
+		return allTransfersByUser;
+	}
 
 	@Override
 	public Transfers getOne(long transferId) {
@@ -58,6 +71,8 @@ public class JdbcTransfersDao implements TransfersDao{
 		String sqlSendTransfer = "INSERT INTO transfers(transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES(?,?,?,?,?)";
 		jdbcTemplate.update(sqlSendTransfer, transferTypeId, transferStatusId, senderId, recieverId, transferAmount);
 	}
+	
+	
 
 	
 	private Transfers mapRowToTransfers(SqlRowSet results) {
@@ -70,6 +85,8 @@ public class JdbcTransfersDao implements TransfersDao{
 		theTransfer.setAmount(results.getBigDecimal("amount"));
 		return theTransfer;
 	}
+
+
 
 
 }

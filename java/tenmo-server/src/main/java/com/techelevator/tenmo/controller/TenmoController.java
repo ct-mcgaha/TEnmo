@@ -13,18 +13,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.tenmo.dao.AccountsDao;
 import com.techelevator.tenmo.dao.TransfersDao;
+import com.techelevator.tenmo.dao.UserDAO;
 import com.techelevator.tenmo.model.Accounts;
 import com.techelevator.tenmo.model.Transfers;
+import com.techelevator.tenmo.model.User;
 
 @RestController
 public class TenmoController {
 
 	private AccountsDao accountsDao;
 	private TransfersDao transfersDao;
+	private UserDAO userDao;
 
-	public TenmoController(AccountsDao accountsDao, TransfersDao transfersDao) {
+	public TenmoController(AccountsDao accountsDao, TransfersDao transfersDao, UserDAO userDao) {
 		this.accountsDao = accountsDao;
 		this.transfersDao = transfersDao;
+		this.userDao = userDao;
 	}
 
 //	@RequestMapping(path = "/transfers", method = RequestMethod.GET)
@@ -39,7 +43,7 @@ public class TenmoController {
 
 	@RequestMapping(path = "/accounts/{id}/balance", method = RequestMethod.GET)
 	public BigDecimal getAccount(@PathVariable int id) {
-		return accountsDao.getAccount(id);
+		return accountsDao.getAccountBalance(id);
 	}
 
 	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.PUT)
@@ -50,7 +54,7 @@ public class TenmoController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable long id) {
-		if (accountsDao.getAccount(id) != null) {
+		if (accountsDao.getAccountBalance(id) != null) {
 		accountsDao.deleteAccount(id);
 		}
 	}
@@ -58,7 +62,7 @@ public class TenmoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(path = "/transfers/send", method = RequestMethod.POST)
 	public void sendTransfer(@RequestBody Transfers sendTransfer) {
-		if (accountsDao.getAccount(sendTransfer.getAccountFrom()).compareTo(sendTransfer.getAmount()) > 0) {
+		if (accountsDao.getAccountBalance(sendTransfer.getAccountFrom()).compareTo(sendTransfer.getAmount()) > 0) {
 			transfersDao.sendTransfer(sendTransfer.getTransferTypeId(), sendTransfer.getTransferStatusId(), sendTransfer.getAccountFrom(), sendTransfer.getAccountTo(), sendTransfer.getAmount());
 			accountsDao.updateSender(sendTransfer.getAmount(), sendTransfer.getAccountFrom());
 			accountsDao.updateReceiver(sendTransfer.getAmount(), sendTransfer.getAccountTo());
@@ -81,6 +85,10 @@ public class TenmoController {
 		return transfersDao.addTransfer(newTransfer);
 	}
 
+	@RequestMapping(path = "/accounts/{id}/transfers", method = RequestMethod.GET)
+	public List<Transfers> getTransferById(@PathVariable int id) {
+		return transfersDao.getTransferForUser(id);
+	}
 
 //	@RequestMapping(path = "/transfers", method = RequestMethod.PUT)
 //	public Accounts sendBucks(@RequestBody Accounts sender, @PathVariable int id) {
@@ -90,6 +98,18 @@ public class TenmoController {
 //	@RequestMapping (path = "/accounts/{id}", method = RequestMethod.GET)
 //	public Accounts getAccountsByTranserID(@PathVariable int id) {
 //		return accountsDao.getAccountByTransferId(id);
+//	}
+	
+//	@RequestMapping (path = "/users", method = RequestMethod.GET)
+//	public List<User> getListOfUsers() {
+//		List<User> allUsers = userDao.findAll();
+//		return allUsers;
+//	}
+//	
+//	@RequestMapping (path = "/users/{id}", method = RequestMethod.GET)
+//	public User getOne(@PathVariable long id) {
+//		User aUser = userDao.findByUserId(id);
+//		return aUser;
 //	}
 
 }

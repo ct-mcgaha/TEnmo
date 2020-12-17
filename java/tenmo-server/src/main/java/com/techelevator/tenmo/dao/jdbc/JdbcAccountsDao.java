@@ -37,7 +37,7 @@ public class JdbcAccountsDao implements AccountsDao {
 	}
 
 	@Override
-	public BigDecimal getAccount(long accountId) {
+	public BigDecimal getAccountBalance(long accountId) {
 		Accounts oneAccount = new Accounts();
 		String sqlgetOneAccount = "SELECT * FROM accounts WHERE account_id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlgetOneAccount, accountId);
@@ -72,14 +72,14 @@ public class JdbcAccountsDao implements AccountsDao {
 	@Override
 	public void updateSender(BigDecimal amount, long senderId) {
 		String sendBucks = "UPDATE accounts SET balance = ? WHERE account_id = ?";
-		jdbcTemplate.update(sendBucks, getAccount(senderId).subtract(amount), senderId);
+		jdbcTemplate.update(sendBucks, getAccountBalance(senderId).subtract(amount), senderId);
 	
 	}
 	
 	@Override
 	public void updateReceiver(BigDecimal amount, long receiverId) {
 		String sendBucks = "UPDATE accounts SET balance = ? WHERE account_id = ?";
-		jdbcTemplate.update(sendBucks, getAccount(receiverId).add(amount), receiverId);
+		jdbcTemplate.update(sendBucks, getAccountBalance(receiverId).add(amount), receiverId);
 	}
 
 	

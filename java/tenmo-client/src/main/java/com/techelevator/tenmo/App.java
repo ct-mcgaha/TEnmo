@@ -1,9 +1,14 @@
 package com.techelevator.tenmo;
 
+import java.math.BigDecimal;
+
 import com.techelevator.tenmo.models.AuthenticatedUser;
+import com.techelevator.tenmo.models.Transfers;
 import com.techelevator.tenmo.models.UserCredentials;
+import com.techelevator.tenmo.services.AccountsService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.AuthenticationServiceException;
+import com.techelevator.tenmo.services.TransfersService;
 import com.techelevator.view.ConsoleService;
 
 public class App {
@@ -25,6 +30,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     private AuthenticatedUser currentUser;
     private ConsoleService console;
     private AuthenticationService authenticationService;
+    private AccountsService accountsService;
+    private TransfersService transfersService;
 
     public static void main(String[] args) {
     	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
@@ -34,6 +41,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     public App(ConsoleService console, AuthenticationService authenticationService) {
 		this.console = console;
 		this.authenticationService = authenticationService;
+		accountsService = new AccountsService(API_BASE_URL);
+		transfersService = new TransfersService(API_BASE_URL);
 	}
 
 	public void run() {
@@ -68,13 +77,21 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewCurrentBalance() {
+		BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId());
+		System.out.println("Your current account balance is : " + balance);
 		// TODO Auto-generated method stub
 		
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-		
+		/*
+		Transfers[] transferHistory = transfersService.viewTransferHistory(currentUser.getUser().getId());
+		System.out.println("Transfers: " + transferHistory);
+		System.out.println("Id   " + "  From/To  " + "  Amount  ");
+		System.out.println("");
+
+		*have to send money first before you can look at history
+		*/
 	}
 
 	private void viewPendingRequests() {
