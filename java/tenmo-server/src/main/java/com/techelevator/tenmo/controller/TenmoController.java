@@ -89,6 +89,13 @@ public class TenmoController {
 	public List<Transfers> getTransferById(@PathVariable int id) {
 		return transfersDao.getTransferForUser(id);
 	}
+	
+	@RequestMapping (path = "/users", method = RequestMethod.GET)
+	public List<User> findAll() {
+		return userDao.findAll();
+	}
+	
+	
 
 //	@RequestMapping(path = "/transfers", method = RequestMethod.PUT)
 //	public Accounts sendBucks(@RequestBody Accounts sender, @PathVariable int id) {

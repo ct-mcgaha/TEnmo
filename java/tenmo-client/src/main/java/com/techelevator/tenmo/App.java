@@ -4,11 +4,13 @@ import java.math.BigDecimal;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.Transfers;
+import com.techelevator.tenmo.models.User;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AccountsService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.AuthenticationServiceException;
 import com.techelevator.tenmo.services.TransfersService;
+import com.techelevator.tenmo.services.UserService;
 import com.techelevator.view.ConsoleService;
 
 public class App {
@@ -26,12 +28,14 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private static final String MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS = "View your pending requests";
 	private static final String MAIN_MENU_OPTION_LOGIN = "Login as different user";
 	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS, MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
+	//private static final String SEND_MENU_OPTION_CHOOSE_RECEIVER = "Enter the ID of the User you'd like to send";
 	
     private AuthenticatedUser currentUser;
     private ConsoleService console;
     private AuthenticationService authenticationService;
     private AccountsService accountsService;
     private TransfersService transfersService;
+    private UserService userService;
 
     public static void main(String[] args) {
     	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
@@ -43,6 +47,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		this.authenticationService = authenticationService;
 		accountsService = new AccountsService(API_BASE_URL);
 		transfersService = new TransfersService(API_BASE_URL);
+		userService = new UserService(API_BASE_URL);
 	}
 
 	public void run() {
@@ -100,8 +105,24 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
-		
+		// prompt currentUser for receiver account from list
+		// currentUser picks receiver (BY ID)
+		// currentUser enters amount to transfer
+		// Set minimum 0 -- if no funds available, return error
+		// sender account - transferAmount && receiver account + transferAmount
+
+		User[] users = userService.getUsers(currentUser.getUser().getId());
+		for (int i = 0; i < users.length; i++) {
+		System.out.printf("%5d %-20s\n", users[i].getId(), users[i].getUsername());
+		}
+		System.out.println(
+				"---------\r\n" + 
+				"Enter ID of user you are sending to (0 to cancel):");
+		// add another menu with choice (user id)
+			// choice = user id
+		// once RECEIVER selected,
+		// input transfer amount
+		// finalize transaction
 	}
 
 	private void requestBucks() {
