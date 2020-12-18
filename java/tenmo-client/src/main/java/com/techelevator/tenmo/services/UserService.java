@@ -29,4 +29,14 @@ public class UserService {
 		}
 		return users;
 	}
+	
+	public User getUserById(long id) {
+		User user = null;
+		try {
+			return restTemplate.getForObject(BASE_URL + "users/" + id, User.class);
+		} catch (RestClientResponseException ex) {
+			System.out.println(ex.getRawStatusCode() + " : " + ex.getMessage());
+		}
+		return user;
+	}
 }

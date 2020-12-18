@@ -97,6 +97,13 @@ public class TenmoController {
 		return userDao.findAll();
 	}
 	
+	@RequestMapping (path = "/users/{id}", method = RequestMethod.GET)
+	public User getUserById(@PathVariable long id) {
+		return userDao.findByUserId(id);
+	}
+	
+	
+	
 	
 
 //	@RequestMapping(path = "/transfers", method = RequestMethod.PUT)

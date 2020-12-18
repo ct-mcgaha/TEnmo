@@ -16,36 +16,39 @@ import com.techelevator.view.ConsoleService;
 
 public class App {
 
-private static final String API_BASE_URL = "http://localhost:8080/";
-    
-    private static final String MENU_OPTION_EXIT = "Exit";
-    private static final String LOGIN_MENU_OPTION_REGISTER = "Register";
+	private static final String API_BASE_URL = "http://localhost:8080/";
+
+	private static final String MENU_OPTION_EXIT = "Exit";
+	private static final String LOGIN_MENU_OPTION_REGISTER = "Register";
 	private static final String LOGIN_MENU_OPTION_LOGIN = "Login";
-	private static final String[] LOGIN_MENU_OPTIONS = { LOGIN_MENU_OPTION_REGISTER, LOGIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
+	private static final String[] LOGIN_MENU_OPTIONS = { LOGIN_MENU_OPTION_REGISTER, LOGIN_MENU_OPTION_LOGIN,
+			MENU_OPTION_EXIT };
 	private static final String MAIN_MENU_OPTION_VIEW_BALANCE = "View your current balance";
 	private static final String MAIN_MENU_OPTION_SEND_BUCKS = "Send TE bucks";
 	private static final String MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS = "View your past transfers";
 	private static final String MAIN_MENU_OPTION_REQUEST_BUCKS = "Request TE bucks";
 	private static final String MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS = "View your pending requests";
 	private static final String MAIN_MENU_OPTION_LOGIN = "Login as different user";
-	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS, MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
+	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS,
+			MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS,
+			MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
 	private static final String SEND_MENU_OPTION_CHOOSE_RECEIVER = "Enter the ID of the User you'd like to send";
 	private static final String SEND_MENU_OPTION_CHOOSE_AMOUNT = "Enter amount";
-	
-    private AuthenticatedUser currentUser;
-    private ConsoleService console;
-    private AuthenticationService authenticationService;
-    private AccountsService accountsService;
-    private TransfersService transfersService;
-    private UserService userService;
-    private Scanner in;
 
-    public static void main(String[] args) {
-    	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
-    	app.run();
-    }
+	private AuthenticatedUser currentUser;
+	private ConsoleService console;
+	private AuthenticationService authenticationService;
+	private AccountsService accountsService;
+	private TransfersService transfersService;
+	private UserService userService;
+	private Scanner in;
 
-    public App(ConsoleService console, AuthenticationService authenticationService) {
+	public static void main(String[] args) {
+		App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
+		app.run();
+	}
+
+	public App(ConsoleService console, AuthenticationService authenticationService) {
 		this.console = console;
 		this.authenticationService = authenticationService;
 		in = new Scanner(System.in);
@@ -58,25 +61,25 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		System.out.println("*********************");
 		System.out.println("* Welcome to TEnmo! *");
 		System.out.println("*********************");
-		
+
 		registerAndLogin();
 		mainMenu();
 	}
 
 	private void mainMenu() {
-		while(true) {
-			String choice = (String)console.getChoiceFromOptions(MAIN_MENU_OPTIONS);
-			if(MAIN_MENU_OPTION_VIEW_BALANCE.equals(choice)) {
+		while (true) {
+			String choice = (String) console.getChoiceFromOptions(MAIN_MENU_OPTIONS);
+			if (MAIN_MENU_OPTION_VIEW_BALANCE.equals(choice)) {
 				viewCurrentBalance();
-			} else if(MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS.equals(choice)) {
+			} else if (MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS.equals(choice)) {
 				viewTransferHistory();
-			} else if(MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS.equals(choice)) {
+			} else if (MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS.equals(choice)) {
 				viewPendingRequests();
-			} else if(MAIN_MENU_OPTION_SEND_BUCKS.equals(choice)) {
+			} else if (MAIN_MENU_OPTION_SEND_BUCKS.equals(choice)) {
 				sendBucks();
-			} else if(MAIN_MENU_OPTION_REQUEST_BUCKS.equals(choice)) {
+			} else if (MAIN_MENU_OPTION_REQUEST_BUCKS.equals(choice)) {
 				requestBucks();
-			} else if(MAIN_MENU_OPTION_LOGIN.equals(choice)) {
+			} else if (MAIN_MENU_OPTION_LOGIN.equals(choice)) {
 				login();
 			} else {
 				// the only other option on the main menu is to exit
@@ -89,37 +92,33 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId());
 		System.out.println("Your current account balance is : " + balance);
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@SuppressWarnings("unlikely-arg-type")
 	private void viewTransferHistory() {
 		Transfers[] transferHistory = transfersService.viewTransferHistory(currentUser.getUser().getId());
-		for (int i = 0; i < transferHistory.length; i++) { 
-			if (transferHistory[i].getAccountFrom().equals(currentUser.getUser().getId())) {
-				System.out.printf("%5d %-20s\n", transferHistory[i].getTransferId() + "From: " + transferHistory[i].getAccountFrom());
-			}
+		for (int i = 0; i < transferHistory.length; i++) {
+			// if
+			// (transferHistory[i].getAccountFrom().equals(currentUser.getUser().getId())) {
+			System.out.printf("%5d %-20s\n", transferHistory[i].getTransferId(),
+					"From: " + userService.getUserById(transferHistory[i].getAccountFrom()), " $", transferHistory[i].getAmount());
+			System.out.printf("%5d %-20s\n", transferHistory[i].getTransferId(),
+					"To: " + transferHistory[i].getAccountTo(), " $", transferHistory[i].getAmount());
 		}
-}
-
-		
-
+	}
+//}
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void sendBucks() {
-		// prompt currentUser for receiver account from list
-		// currentUser picks receiver (BY ID)
-		// currentUser enters amount to transfer
-		// Set minimum 0 -- if no funds available, return error
-		// sender account - transferAmount && receiver account + transferAmount
-
 		User[] users = userService.getUsers(currentUser.getUser().getId());
 		for (int i = 0; i < users.length; i++) {
-		System.out.printf("%5d %-20s\n", users[i].getId(), users[i].getUsername());
+			System.out.printf("%5d %-20s\n", users[i].getId(), users[i].getUsername());
+			// System.out.println(users[i].getId().toString());
 		}
 //		System.out.println(
 //				"---------\r\n" + 
@@ -127,43 +126,45 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		boolean choice = false;
 		Integer nameId = null;
 		while (choice == false) {
-			 nameId = (Integer)console.getUserInputInteger(SEND_MENU_OPTION_CHOOSE_RECEIVER);
+			nameId = (Integer) console.getUserInputInteger(SEND_MENU_OPTION_CHOOSE_RECEIVER);
 //			nameId = Integer.parseInt(in.nextLine());
-			if(nameId == 0) {
+			if (nameId == 0) {
 				choice = true;
 				return;
 			} else {
-				for(User user : users) {
+				for (User user : users) {
 					if (user.getId().equals(nameId)) {
 						choice = true;
 					}
-				} if (choice == false) {
+				}
+				if (choice == false) {
 					System.out.println("Not a valid choice. Choose again");
 				}
 			}
 		}
-		
-		
+
 		boolean sendAmount = false;
 		while (sendAmount == false) {
 			BigDecimal amount = console.getUserBigDecimal(SEND_MENU_OPTION_CHOOSE_AMOUNT);
-			if(amount.compareTo(BigDecimal.ZERO) == 0) {
+			if (amount.compareTo(BigDecimal.ZERO) == 0) {
 				System.out.println("Enter value above 0");
 				return;
-			} if (amount.compareTo(BigDecimal.ZERO) > 0) {
+			}
+			if (amount.compareTo(BigDecimal.ZERO) > 0) {
 				long transferTypeId = 2;
 				long transferStatusId = 2;
-				transfersService.sendTransfer(transferTypeId, transferStatusId, currentUser.getUser().getId(), nameId, amount);
+				transfersService.sendTransfer(transferTypeId, transferStatusId, currentUser.getUser().getId(), nameId,
+						amount);
 				BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId());
 				System.out.println("Current Balance: " + balance);
 				sendAmount = true;
 			} else {
 				System.out.println("Insufficient funds");
 			}
-			
+
 		}
 		// add another menu with choice (user id)
-			// choice = user id
+		// choice = user id
 		// once RECEIVER selected,
 		// input transfer amount
 		// finalize transaction
@@ -171,16 +172,16 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	private void exitProgram() {
 		System.exit(0);
 	}
 
 	private void registerAndLogin() {
-		while(!isAuthenticated()) {
-			String choice = (String)console.getChoiceFromOptions(LOGIN_MENU_OPTIONS);
+		while (!isAuthenticated()) {
+			String choice = (String) console.getChoiceFromOptions(LOGIN_MENU_OPTIONS);
 			if (LOGIN_MENU_OPTION_LOGIN.equals(choice)) {
 				login();
 			} else if (LOGIN_MENU_OPTION_REGISTER.equals(choice)) {
@@ -199,35 +200,35 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private void register() {
 		System.out.println("Please register a new user account");
 		boolean isRegistered = false;
-        while (!isRegistered) //will keep looping until user is registered
-        {
-            UserCredentials credentials = collectUserCredentials();
-            try {
-            	authenticationService.register(credentials);
-            	isRegistered = true;
-            	System.out.println("Registration successful. You can now login.");
-            } catch(AuthenticationServiceException e) {
-            	System.out.println("REGISTRATION ERROR: "+e.getMessage());
+		while (!isRegistered) // will keep looping until user is registered
+		{
+			UserCredentials credentials = collectUserCredentials();
+			try {
+				authenticationService.register(credentials);
+				isRegistered = true;
+				System.out.println("Registration successful. You can now login.");
+			} catch (AuthenticationServiceException e) {
+				System.out.println("REGISTRATION ERROR: " + e.getMessage());
 				System.out.println("Please attempt to register again.");
-            }
-        }
+			}
+		}
 	}
 
 	private void login() {
 		System.out.println("Please log in");
 		currentUser = null;
-		while (currentUser == null) //will keep looping until user is logged in
+		while (currentUser == null) // will keep looping until user is logged in
 		{
 			UserCredentials credentials = collectUserCredentials();
-		    try {
+			try {
 				currentUser = authenticationService.login(credentials);
 			} catch (AuthenticationServiceException e) {
-				System.out.println("LOGIN ERROR: "+e.getMessage());
+				System.out.println("LOGIN ERROR: " + e.getMessage());
 				System.out.println("Please attempt to login again.");
 			}
 		}
 	}
-	
+
 	private UserCredentials collectUserCredentials() {
 		String username = console.getUserInput("Username");
 		String password = console.getUserInput("Password");
