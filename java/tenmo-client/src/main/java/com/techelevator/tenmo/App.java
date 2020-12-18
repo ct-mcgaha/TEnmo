@@ -98,16 +98,16 @@ public class App {
 	@SuppressWarnings("unlikely-arg-type")
 	private void viewTransferHistory() {
 		Transfers[] transferHistory = transfersService.viewTransferHistory(currentUser.getUser().getId());
+		System.out.println("Id   From/To          Amount");
+		System.out.println("=============================");
 		for (int i = 0; i < transferHistory.length; i++) {
-			// if
-			// (transferHistory[i].getAccountFrom().equals(currentUser.getUser().getId())) {
-			System.out.printf("%5d %-20s\n", transferHistory[i].getTransferId(),
-					"From: " + userService.getUserById(transferHistory[i].getAccountFrom()), " $", transferHistory[i].getAmount());
-			System.out.printf("%5d %-20s\n", transferHistory[i].getTransferId(),
-					"To: " + transferHistory[i].getAccountTo(), " $", transferHistory[i].getAmount());
+			System.out.printf("%-4s %-15s %-7s\n", transferHistory[i].getTransferId(),
+					"From: " + userService.getUserById(transferHistory[i].getAccountFrom()).getUsername(), "$" + transferHistory[i].getAmount());
+			System.out.printf("%-4s %-15s %-7s\n", transferHistory[i].getTransferId(),
+					"To: " + userService.getUserById(transferHistory[i].getAccountTo()).getUsername(), "$" + transferHistory[i].getAmount());
 		}
 	}
-//}
+
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub

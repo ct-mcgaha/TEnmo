@@ -27,6 +27,6 @@ public class User {
 	            "\n Users" +
 	            "\n--------------------------------------------" +
 	            "\n Id: " + id +
-	            "\n Name:'" + username;
+	            "\n Name: " + username;
 	}
 }
