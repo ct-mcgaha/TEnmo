@@ -2,12 +2,21 @@ package com.techelevator.tenmo.model;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+
 public class Transfers {
+	
 	private Long transferId;
+	@Min(value = 1, message = "The field 'transferTypeId' should not be blank")
 	private Long transferTypeId;
+	@Min(value = 1, message = "The field 'transferStatusId' should not be blank")
 	private Long transferStatusId;
+	@Min(value = 1, message = "The field 'accountFrom' should not be blank")
 	private Long accountFrom;
+	@Min(value = 1, message = "The field 'accountTo' should not be blank")
 	private Long accountTo;
+	@DecimalMin(value = "0.0", message = "The field 'amount' should not be blank")
 	private BigDecimal amount;
 	
 	public Long getTransferId() {

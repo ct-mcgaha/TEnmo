@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import com.techelevator.tenmo.model.Transfers;
 import com.techelevator.tenmo.model.User;
 
 @RestController
+@PreAuthorize("isAuthenticated()")
 public class TenmoController {
 
 	private AccountsDao accountsDao;
@@ -42,17 +44,19 @@ public class TenmoController {
 	public List<Accounts> listAccounts() {
 		return accountsDao.listAccounts();
 	}
-
+	
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@RequestMapping(path = "/accounts/{id}/balance", method = RequestMethod.GET)
 	public BigDecimal getAccount(@PathVariable int id) {
 		return accountsDao.getAccountBalance(id);
 	}
 
 	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.PUT)
-	public Accounts update(@RequestBody Accounts updatedAccount, @PathVariable int id) {
+	public Accounts update(@Valid @RequestBody Accounts updatedAccount, @PathVariable int id) {
 		return accountsDao.updateAccount(updatedAccount, id);
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable long id) {
@@ -63,7 +67,7 @@ public class TenmoController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(path = "/transfers/send", method = RequestMethod.POST)
-	public void sendTransfer(@RequestBody Transfers sendTransfer) {
+	public void sendTransfer(@Valid @RequestBody Transfers sendTransfer) {
 		if (accountsDao.getAccountBalance(sendTransfer.getAccountFrom()).compareTo(sendTransfer.getAmount()) == 1) {
 			transfersDao.sendTransfer(sendTransfer.getTransferTypeId(), sendTransfer.getTransferStatusId(), sendTransfer.getAccountFrom(), sendTransfer.getAccountTo(), sendTransfer.getAmount());
 			accountsDao.updateSender(sendTransfer.getAmount(), sendTransfer.getAccountFrom());
