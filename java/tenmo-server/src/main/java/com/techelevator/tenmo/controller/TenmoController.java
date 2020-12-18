@@ -3,6 +3,8 @@ package com.techelevator.tenmo.controller;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,7 +64,7 @@ public class TenmoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(path = "/transfers/send", method = RequestMethod.POST)
 	public void sendTransfer(@RequestBody Transfers sendTransfer) {
-		if (accountsDao.getAccountBalance(sendTransfer.getAccountFrom()).compareTo(sendTransfer.getAmount()) > 0) {
+		if (accountsDao.getAccountBalance(sendTransfer.getAccountFrom()).compareTo(sendTransfer.getAmount()) == 1) {
 			transfersDao.sendTransfer(sendTransfer.getTransferTypeId(), sendTransfer.getTransferStatusId(), sendTransfer.getAccountFrom(), sendTransfer.getAccountTo(), sendTransfer.getAmount());
 			accountsDao.updateSender(sendTransfer.getAmount(), sendTransfer.getAccountFrom());
 			accountsDao.updateReceiver(sendTransfer.getAmount(), sendTransfer.getAccountTo());
