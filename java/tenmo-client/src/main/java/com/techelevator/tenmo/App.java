@@ -92,16 +92,18 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	private void viewTransferHistory() {
-		/*
 		Transfers[] transferHistory = transfersService.viewTransferHistory(currentUser.getUser().getId());
-		System.out.println("Transfers: " + transferHistory);
-		System.out.println("Id   " + "  From/To  " + "  Amount  ");
-		System.out.println("");
+		for (int i = 0; i < transferHistory.length; i++) { 
+			if (transferHistory[i].getAccountFrom().equals(currentUser.getUser().getId())) {
+				System.out.printf("%5d %-20s\n", transferHistory[i].getTransferId() + "From: " + transferHistory[i].getAccountFrom());
+			}
+		}
+}
 
-		*have to send money first before you can look at history
-		*/
-	}
+		
+
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub

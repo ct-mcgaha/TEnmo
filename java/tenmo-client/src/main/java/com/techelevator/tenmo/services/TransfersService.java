@@ -28,7 +28,7 @@ public class TransfersService {
 	public Transfers[] viewTransferHistory(long id) {
 		Transfers[] transfer = null;
 		try {
-		return restTemplate.getForObject(BASE_URL + "accounts" + id + "/transfers", Transfers[].class);
+		return restTemplate.getForObject(BASE_URL + "accounts/" + id + "/transfers", Transfers[].class);
 		} catch (RestClientResponseException ex) {
 		      System.out.println(ex.getRawStatusCode() + " : " + ex.getStatusText());
 	    } catch (ResourceAccessException ex) {
@@ -38,8 +38,13 @@ public class TransfersService {
 	}
 	
 	public Transfers sendTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal amount) {
-		Transfers transfer = null;
-//		transfer.setAmount(transferAmount);
+		Transfers transfer = new Transfers();
+		transfer.setAmount(amount);
+		transfer.setTransferTypeId(transferTypeId);
+		transfer.setTransferStatusId(transferStatusId);
+		transfer.setAccountFrom(accountFrom);
+		transfer.setAccountTo(accountTo);
+		
 		try {
 			return restTemplate.postForObject(BASE_URL + "transfers/send", transferEntity(transfer), Transfers.class);
 		} catch (RestClientResponseException ex) {
@@ -48,11 +53,11 @@ public class TransfersService {
 		return transfer;
 	}
 	
-	private HttpEntity transferEntity(Transfers transfer) {
+	private HttpEntity<Transfers> transferEntity(Transfers sendTransfer) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setBearerAuth(AUTH_TOKEN);
-		HttpEntity<Transfers> entity = new HttpEntity<>(transfer, headers);
+		HttpEntity<Transfers> entity = new HttpEntity<>(sendTransfer, headers);
 		return entity;
 	}
 	
