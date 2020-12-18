@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
@@ -19,12 +20,13 @@ public class AccountsService {
 		restTemplate = new RestTemplate();
 	}
 	
-	public BigDecimal getAccountBalance(long id) {
+	public BigDecimal getAccountBalance(long id, String authToken) {
 		BigDecimal theAccount = null;
+		AUTH_TOKEN = authToken;
 		try {
-		 return restTemplate.getForObject(BASE_URL + "accounts/" + id + "/balance", BigDecimal.class);
+		 return restTemplate.exchange(BASE_URL + "accounts/" + id + "/balance", HttpMethod.GET, makeAuthEntity(), BigDecimal.class).getBody();
 		} catch (RestClientResponseException ex) {
-		      System.out.println(ex.getRawStatusCode() + " : " + ex.getStatusText());
+		      System.out.println(ex.getRawStatusCode() + " : " + ex.getMessage());
 	    } catch (ResourceAccessException ex) {
 	    	System.out.println(ex.getMessage());
 	    }

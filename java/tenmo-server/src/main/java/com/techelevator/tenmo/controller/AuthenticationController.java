@@ -2,6 +2,7 @@ package com.techelevator.tenmo.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ import com.techelevator.tenmo.security.jwt.TokenProvider;
 @RestController
 public class AuthenticationController {
 
+	public static String AUTH_TOKEN = "";
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private UserDAO userDAO;
@@ -100,5 +102,12 @@ public class AuthenticationController {
 			this.user = user;
 		}
     }
+    
+	private HttpEntity makeAuthEntity() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(AUTH_TOKEN);
+		HttpEntity entity = new HttpEntity(headers);
+		return entity;
+	}
 }
 

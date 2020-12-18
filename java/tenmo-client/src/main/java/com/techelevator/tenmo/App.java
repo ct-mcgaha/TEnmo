@@ -89,25 +89,23 @@ public class App {
 	}
 
 	private void viewCurrentBalance() {
-		BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId());
+		BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId(), currentUser.getToken());
 		System.out.println("Your current account balance is : " + balance);
-		// TODO Auto-generated method stub
-
 	}
 
 	@SuppressWarnings("unlikely-arg-type")
 	private void viewTransferHistory() {
-		Transfers[] transferHistory = transfersService.viewTransferHistory(currentUser.getUser().getId());
-		System.out.println("Id   From/To          Amount");
-		System.out.println("=============================");
+		Transfers[] transferHistory = transfersService.viewTransferHistory(currentUser.getUser().getId(), currentUser.getToken());
 		for (int i = 0; i < transferHistory.length; i++) {
-			System.out.printf("%-4s %-15s %-7s\n", transferHistory[i].getTransferId(),
-					"From: " + userService.getUserById(transferHistory[i].getAccountFrom()).getUsername(), "$" + transferHistory[i].getAmount());
-			System.out.printf("%-4s %-15s %-7s\n", transferHistory[i].getTransferId(),
-					"To: " + userService.getUserById(transferHistory[i].getAccountTo()).getUsername(), "$" + transferHistory[i].getAmount());
+			// if
+			// (transferHistory[i].getAccountFrom().equals(currentUser.getUser().getId())) {
+			System.out.printf("%5d %-20s\n", transferHistory[i].getTransferId(),
+					"From: " + userService.getUserById(transferHistory[i].getAccountFrom()), " $", transferHistory[i].getAmount(), currentUser.getToken());
+			System.out.printf("%5d %-20s\n", transferHistory[i].getTransferId(),
+					"To: " + transferHistory[i].getAccountTo(), " $", transferHistory[i].getAmount());
 		}
 	}
-
+//}
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub
@@ -115,7 +113,7 @@ public class App {
 	}
 
 	private void sendBucks() {
-		User[] users = userService.getUsers(currentUser.getUser().getId());
+		User[] users = userService.getUsers(currentUser.getUser().getId(), currentUser.getToken());
 		for (int i = 0; i < users.length; i++) {
 			System.out.printf("%5d %-20s\n", users[i].getId(), users[i].getUsername());
 			// System.out.println(users[i].getId().toString());
@@ -155,7 +153,7 @@ public class App {
 				long transferStatusId = 2;
 				transfersService.sendTransfer(transferTypeId, transferStatusId, currentUser.getUser().getId(), nameId,
 						amount);
-				BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId());
+				BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId(), currentUser.getToken());
 				System.out.println("Current Balance: " + balance);
 				sendAmount = true;
 			} else {

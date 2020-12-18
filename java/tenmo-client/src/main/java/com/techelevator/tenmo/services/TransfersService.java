@@ -25,10 +25,11 @@ public class TransfersService {
 	}
 	
 	
-	public Transfers[] viewTransferHistory(long id) {
+	public Transfers[] viewTransferHistory(long id, String authToken) {
 		Transfers[] transfer = null;
+		AUTH_TOKEN = authToken;
 		try {
-		return restTemplate.getForObject(BASE_URL + "accounts/" + id + "/transfers", Transfers[].class);
+		return restTemplate.exchange(BASE_URL + "accounts/" + id + "/transfers", HttpMethod.GET, makeAuthEntity(), Transfers[].class).getBody();
 		} catch (RestClientResponseException ex) {
 		      System.out.println(ex.getRawStatusCode() + " : " + ex.getStatusText());
 	    } catch (ResourceAccessException ex) {
