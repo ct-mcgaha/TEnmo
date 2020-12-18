@@ -15,7 +15,7 @@ public interface TransfersDao {
 	
 	Transfers addTransfer(Transfers transfer);
 	
-	void sendTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal transferAmount);
+	void sendTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal amount);
 	
 	List<Transfers> getTransferForUser(long id);
 

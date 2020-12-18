@@ -32,9 +32,9 @@ public class TransfersService {
 		return transfer;
 	}
 	
-	public Transfers sendTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal transferAmount) {
+	public Transfers sendTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal amount) {
 		Transfers transfer = null;
-		transfer.setAmount(transferAmount);
+//		transfer.setAmount(transferAmount);
 		try {
 			return restTemplate.getForObject(BASE_URL + "transfers/send", Transfers.class);
 		} catch (RestClientResponseException ex) {

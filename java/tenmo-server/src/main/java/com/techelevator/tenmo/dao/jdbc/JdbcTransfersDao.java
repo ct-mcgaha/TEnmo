@@ -67,9 +67,9 @@ public class JdbcTransfersDao implements TransfersDao{
 	
 	
 	@Override
-	public void sendTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal transferAmount) {
+	public void sendTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal amount) {
 		String sqlSendTransfer = "INSERT INTO transfers(transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES(?,?,?,?,?)";
-		jdbcTemplate.update(sqlSendTransfer, transferTypeId, transferStatusId, accountFrom, accountTo, transferAmount);
+		jdbcTemplate.update(sqlSendTransfer, transferTypeId, transferStatusId, accountFrom, accountTo, amount);
 	}
 	
 	
