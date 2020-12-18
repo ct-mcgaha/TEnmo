@@ -99,10 +99,10 @@ public class App {
 		for (int i = 0; i < transferHistory.length; i++) {
 			// if
 			// (transferHistory[i].getAccountFrom().equals(currentUser.getUser().getId())) {
-			System.out.printf("%5d %-20s\n", transferHistory[i].getTransferId(),
-					"From: " + userService.getUserById(transferHistory[i].getAccountFrom()), " $", transferHistory[i].getAmount(), currentUser.getToken());
-			System.out.printf("%5d %-20s\n", transferHistory[i].getTransferId(),
-					"To: " + transferHistory[i].getAccountTo(), " $", transferHistory[i].getAmount());
+			System.out.printf("%-4s %-15s %-7s %-7s\n", transferHistory[i].getTransferId(),
+					"From: " + userService.getUserById(transferHistory[i].getAccountFrom(), currentUser.getToken()).getUsername(), " $", transferHistory[i].getAmount());
+			System.out.printf("%-4s %-15s %-7s %-7s\n", transferHistory[i].getTransferId(),
+					"To: " + userService.getUserById(transferHistory[i].getAccountTo(), currentUser.getToken()).getUsername(), " $", transferHistory[i].getAmount());
 		}
 	}
 //}
@@ -152,12 +152,17 @@ public class App {
 				long transferTypeId = 2;
 				long transferStatusId = 2;
 				transfersService.sendTransfer(transferTypeId, transferStatusId, currentUser.getUser().getId(), nameId,
-						amount);
+						amount, currentUser.getToken());
 				BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId(), currentUser.getToken());
+				if (amount.compareTo(balance) == 1) {
+					System.out.println("Not enough funds");
+				}
 				System.out.println("Current Balance: " + balance);
 				sendAmount = true;
-			} else {
-				System.out.println("Insufficient funds");
+			} 
+			else {
+				System.out.println("Not able to send negative dollars");
+				return;
 			}
 
 		}

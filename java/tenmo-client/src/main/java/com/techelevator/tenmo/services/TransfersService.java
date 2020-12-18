@@ -2,9 +2,9 @@ package com.techelevator.tenmo.services;
 
 import java.math.BigDecimal;
 
-import org.openqa.selenium.remote.http.HttpMethod;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -28,8 +28,9 @@ public class TransfersService {
 	public Transfers[] viewTransferHistory(long id, String authToken) {
 		Transfers[] transfer = null;
 		AUTH_TOKEN = authToken;
+		HttpEntity<?> entity = makeAuthEntity();
 		try {
-		return restTemplate.exchange(BASE_URL + "accounts/" + id + "/transfers", HttpMethod.GET, makeAuthEntity(), Transfers[].class).getBody();
+		transfer = restTemplate.exchange(BASE_URL + "accounts/" + id + "/transfers", HttpMethod.GET, entity, Transfers[].class).getBody();
 		} catch (RestClientResponseException ex) {
 		      System.out.println(ex.getRawStatusCode() + " : " + ex.getStatusText());
 	    } catch (ResourceAccessException ex) {
@@ -38,7 +39,8 @@ public class TransfersService {
 		return transfer;
 	}
 	
-	public Transfers sendTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal amount) {
+	public Transfers sendTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal amount, String authToken) {
+		AUTH_TOKEN = authToken;
 		Transfers transfer = new Transfers();
 		transfer.setAmount(amount);
 		transfer.setTransferTypeId(transferTypeId);
@@ -62,7 +64,7 @@ public class TransfersService {
 		return entity;
 	}
 	
-	private HttpEntity makeAuthEntity() {
+	private HttpEntity<?> makeAuthEntity() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setBearerAuth(AUTH_TOKEN);
 		HttpEntity entity = new HttpEntity(headers);
