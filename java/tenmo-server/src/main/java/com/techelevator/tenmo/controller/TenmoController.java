@@ -45,7 +45,6 @@ public class TenmoController {
 		return accountsDao.listAccounts();
 	}
 	
-	//@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@RequestMapping(path = "/accounts/{id}/balance", method = RequestMethod.GET)
 	public BigDecimal getAccount(@PathVariable int id) {
 		return accountsDao.getAccountBalance(id);
