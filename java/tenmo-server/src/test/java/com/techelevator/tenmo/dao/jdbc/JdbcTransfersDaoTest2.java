@@ -2,6 +2,7 @@ package com.techelevator.tenmo.dao.jdbc;
 
 import static org.junit.Assert.fail;
 
+
 import java.sql.SQLException;
 
 import org.junit.After;
@@ -36,7 +37,7 @@ public class JdbcTransfersDaoTest2 {
 	
 	@Before
 	public void setup() {
-		dao = new JdbcTransfersDAO(dataSource);
+		dao = new JdbcTransfersDao(dataSource);
 	}
 
 	@After
