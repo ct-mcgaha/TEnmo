@@ -36,7 +36,7 @@ public class JdbcAccountsDao implements AccountsDao {
 		}
 		
 		return allAccounts;
-	}
+	} 
 
 	@Override
 	public BigDecimal getAccountBalance(long accountId) {
@@ -73,10 +73,10 @@ public class JdbcAccountsDao implements AccountsDao {
 //		return account;
 //	}
 //	
-//	public void deleteAccount(long accountId) {
-//		String sql = "DELETE FROM accounts WHERE account_id = ?";
-//		jdbcTemplate.update(sql, accountId);
-//	}
+	public void deleteAccount(long accountId) {
+		String sql = "DELETE FROM accounts WHERE account_id = ?";
+		jdbcTemplate.update(sql, accountId);
+	}
 	
 	/*
 	 *  This is a method that updates the SENDER'S account...

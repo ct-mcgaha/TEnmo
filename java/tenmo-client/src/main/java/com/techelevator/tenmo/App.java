@@ -96,42 +96,38 @@ public class App {
 	@SuppressWarnings("unlikely-arg-type")
 	private void viewTransferHistory() {
 		Transfers[] transferHistory = transfersService.viewTransferHistory(currentUser.getUser().getId(), currentUser.getToken());
+		System.out.println("Id     From/To                Amount");
+		System.out.println("=====================================");
 		for (int i = 0; i < transferHistory.length; i++) {
-			// if
-			// (transferHistory[i].getAccountFrom().equals(currentUser.getUser().getId())) {
-			System.out.printf("%-4s %-15s %-7s %-7s\n", transferHistory[i].getTransferId(),
-					"From: " + userService.getUserById(transferHistory[i].getAccountFrom(), currentUser.getToken()).getUsername(), " $", transferHistory[i].getAmount());
-			System.out.printf("%-4s %-15s %-7s %-7s\n", transferHistory[i].getTransferId(),
-					"To: " + userService.getUserById(transferHistory[i].getAccountTo(), currentUser.getToken()).getUsername(), " $", transferHistory[i].getAmount());
+			System.out.printf("%-5d %-15s %-7s %-1s\n", transferHistory[i].getTransferId(),
+					"From: " + userService.getUserById(transferHistory[i].getAccountFrom(), currentUser.getToken()).getUsername(), "$", transferHistory[i].getAmount());
+			System.out.printf("%-5d %-15s %-7s %-1s\n", transferHistory[i].getTransferId(),
+					"To: " + userService.getUserById(transferHistory[i].getAccountTo(), currentUser.getToken()).getUsername(), "$", transferHistory[i].getAmount());
 		}
 	}
-//}
+
 
 	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
-
 	}
 
 	private void sendBucks() {
 		User[] users = userService.getUsers(currentUser.getUser().getId(), currentUser.getToken());
 		for (int i = 0; i < users.length; i++) {
 			System.out.printf("%5d %-20s\n", users[i].getId(), users[i].getUsername());
-			// System.out.println(users[i].getId().toString());
 		}
-//		System.out.println(
-//				"---------\r\n" + 
-//				"Enter ID of user you are sending to (0 to cancel):");
 		boolean choice = false;
 		Integer nameId = null;
 		while (choice == false) {
 			nameId = (Integer) console.getUserInputInteger(SEND_MENU_OPTION_CHOOSE_RECEIVER);
-//			nameId = Integer.parseInt(in.nextLine());
 			if (nameId == 0) {
 				choice = true;
 				return;
-			} else {
-				for (User user : users) {
-					if (user.getId().equals(nameId)) {
+			} else if (nameId == currentUser.getUser().getId()) {
+				System.out.println("Can't transfer to same account.");
+			}
+			else {
+				for (int i = 0; i < users.length; i++) {
+					if (users[i].getId().equals(nameId)) {
 						choice = true;
 					}
 				}
@@ -140,14 +136,9 @@ public class App {
 				}
 			}
 		}
-
 		boolean sendAmount = false;
 		while (sendAmount == false) {
 			BigDecimal amount = console.getUserBigDecimal(SEND_MENU_OPTION_CHOOSE_AMOUNT);
-			if (amount.compareTo(BigDecimal.ZERO) == 0) {
-				System.out.println("Enter value above 0");
-				return;
-			}
 			if (amount.compareTo(BigDecimal.ZERO) > 0) {
 				long transferTypeId = 2;
 				long transferStatusId = 2;
@@ -160,22 +151,19 @@ public class App {
 				System.out.println("Current Balance: " + balance);
 				sendAmount = true;
 			} 
+			if (amount.compareTo(BigDecimal.ZERO) == 0) {
+				System.out.println("Enter value above 0");
+				return;
+			}
 			else {
 				System.out.println("Not able to send negative dollars");
 				return;
 			}
 
 		}
-		// add another menu with choice (user id)
-		// choice = user id
-		// once RECEIVER selected,
-		// input transfer amount
-		// finalize transaction
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-
 	}
 
 	private void exitProgram() {

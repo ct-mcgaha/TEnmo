@@ -12,7 +12,7 @@ public class Accounts {
 		
 	}
 	
-	public Accounts(int accountId, int userId, BigDecimal balance) {
+	public Accounts(long accountId, long userId, BigDecimal balance) {
 		super();
 		this.accountId = accountId;
 		this.userId = userId;
