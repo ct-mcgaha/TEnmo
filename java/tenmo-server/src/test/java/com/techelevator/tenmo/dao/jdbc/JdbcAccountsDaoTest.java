@@ -23,7 +23,7 @@ import com.techelevator.tenmo.model.Transfers;
 
 
 
-public class JdbcTransfersDaoTest {
+public class JdbcAccountsDaoTest {
 	
 	private static SingleConnectionDataSource dataSource;
 	private JdbcTransfersDao dao;
@@ -31,7 +31,7 @@ public class JdbcTransfersDaoTest {
 	@BeforeClass
 	public static void setupDataSource() {
 		dataSource = new SingleConnectionDataSource();
-		dataSource.setUrl("jdbc:postgresql://localhost:8080/transfers");
+		dataSource.setUrl("jdbc:postgresql://localhost:8080/accounts");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
 		dataSource.setAutoCommit(false);
@@ -44,7 +44,7 @@ public class JdbcTransfersDaoTest {
 	
 	@Before
 	public void setup() {
-		dao = JdbcTransfersDao(dataSource);
+		dao = JdbcAccountsDao(dataSource);
 	}
 
 	@After
@@ -53,7 +53,7 @@ public class JdbcTransfersDaoTest {
 	}
 
 	@Test
-	public void get_transfers_by_id_returns_id() {
+	public void get_accounts_by_id() {
 		long accountFrom = 3;
 		
 		List<Transfers> user3 = dao.getTransferForUser(accountFrom);
@@ -63,14 +63,12 @@ public class JdbcTransfersDaoTest {
 		assertEquals();
 	}
 	
-	private Transfers getTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal amount) {
-		Transfers theTransfer = new Transfers();
-		theTransfer.setTransferTypeId(transferTypeId);
-		theTransfer.setTransferStatusId(transferStatusId);
-		theTransfer.setAccountFrom(accountFrom);
-		theTransfer.setAccountTo(accountTo);
-		theTransfer.setAmount(amount);
-		return theTransfer;
+	private Accounts getAccount(long accountId, BigDecimal balance, long userId) {
+		Accounts theAccount = new Accounts();
+		theAccount.setAccountId(accountId);
+		theAccount.setBalance(balance);
+		theAccount.setUserId(userId);
+		return theAccount;
 	}
 
 }

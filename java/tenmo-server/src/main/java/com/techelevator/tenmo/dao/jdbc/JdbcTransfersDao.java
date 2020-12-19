@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +17,8 @@ public class JdbcTransfersDao implements TransfersDao{
 	
 	private JdbcTemplate jdbcTemplate;
 
-	public JdbcTransfersDao(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
+	public JdbcTransfersDao(SingleConnectionDataSource dataSource) {
+		this.jdbcTemplate = dataSource;
 	}
 
 	@Override
