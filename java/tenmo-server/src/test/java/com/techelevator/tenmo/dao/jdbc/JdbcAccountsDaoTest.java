@@ -26,7 +26,7 @@ import com.techelevator.tenmo.model.Transfers;
 public class JdbcAccountsDaoTest {
 	
 	private static SingleConnectionDataSource dataSource;
-	private JdbcTransfersDao dao;
+	private JdbcAccountsDao dao;
 
 	@BeforeClass
 	public static void setupDataSource() {
@@ -44,7 +44,7 @@ public class JdbcAccountsDaoTest {
 	
 	@Before
 	public void setup() {
-		dao = JdbcAccountsDao(dataSource);
+		dao = new JdbcAccountsDao(dataSource);
 	}
 
 	@After
@@ -54,13 +54,7 @@ public class JdbcAccountsDaoTest {
 
 	@Test
 	public void get_accounts_by_id() {
-		long accountFrom = 3;
 		
-		List<Transfers> user3 = dao.getTransferForUser(accountFrom);
-		List<Transfers> transfers3  = dao.getTransfers();
-		
-		assertNotNull(transfers3);
-		assertEquals();
 	}
 	
 	private Accounts getAccount(long accountId, BigDecimal balance, long userId) {

@@ -4,8 +4,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +17,10 @@ import com.techelevator.tenmo.model.Transfers;
 public class JdbcTransfersDao implements TransfersDao{
 	
 	private JdbcTemplate jdbcTemplate;
-
-	public JdbcTransfersDao(SingleConnectionDataSource dataSource) {
-		this.jdbcTemplate = dataSource;
+	
+	public JdbcTransfersDao(DataSource dataSource) {
+		super();
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
 	@Override
