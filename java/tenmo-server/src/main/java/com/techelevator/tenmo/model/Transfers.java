@@ -19,6 +19,23 @@ public class Transfers {
 	@DecimalMin(value = "0.0", message = "The field 'amount' should not be blank")
 	private BigDecimal amount;
 	
+	
+	
+	public Transfers(Long transferId, Long transferTypeId, Long transferStatusId, Long accountFrom, Long accountTo, BigDecimal amount) {
+		this.transferId = transferId;
+		this.transferTypeId = transferTypeId;
+		this.transferStatusId = transferStatusId;
+		this.accountFrom = accountFrom;
+		this.accountTo = accountTo;
+		this.amount = amount;
+	}
+	
+	
+	public Transfers() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	public Long getTransferId() {
 		return transferId;
 	}

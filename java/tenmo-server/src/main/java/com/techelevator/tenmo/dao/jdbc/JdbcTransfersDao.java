@@ -43,8 +43,8 @@ public class JdbcTransfersDao implements TransfersDao{
 			Transfers allTransfers = mapRowToTransfers(results);
 			allTransfersByUser.add(allTransfers);
 		}
-		return allTransfersByUser;
-	}
+		return allTransfersByUser; 
+	} 
 
 	@Override
 	public Transfers getOne(long transferId) {

@@ -17,6 +17,12 @@ public class Accounts {
 		
 	}
 
+	public Accounts(long accountId, long userId, BigDecimal balance) {
+		this.accountId = accountId;
+		this.userId = userId;
+		this.balance = balance;
+	}
+
 	public long getAccountId() {
 		return accountId;
 	}
@@ -34,7 +40,7 @@ public class Accounts {
 	}
 	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
-	}
+	} 
 	
 //	@Override
 //	public String toString() {
