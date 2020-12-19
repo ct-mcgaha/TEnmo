@@ -1,28 +1,22 @@
 package com.techelevator.tenmo.dao.jdbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-
-import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.techelevator.tenmo.model.Accounts;
-import com.techelevator.tenmo.model.Transfers;
 
-
-
-public class JdbcAccountsDaoTest {
+public class JdbcAccountsDaoTest3 {
 	
 	private static SingleConnectionDataSource dataSource;
 	private JdbcAccountsDao dao;
@@ -30,7 +24,7 @@ public class JdbcAccountsDaoTest {
 	@BeforeClass
 	public static void setupDataSource() {
 		dataSource = new SingleConnectionDataSource();
-		dataSource.setUrl("jdbc:postgresql://localhost:8080/accounts");
+		dataSource.setUrl("jdbc:postgresql://localhost:5432/tenmo");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
 		dataSource.setAutoCommit(false);
@@ -61,9 +55,18 @@ public class JdbcAccountsDaoTest {
 	
 	private Accounts getAccount(long accountId, BigDecimal balance, long userId) {
 		Accounts theAccount = new Accounts();
-		theAccount.setAccountId(accountId);
+		theAccount.setAccountId();
 		theAccount.setBalance(balance);
 		theAccount.setUserId(userId);
+		return theAccount;
+	}
+	
+	private Accounts mapRowToAccounts(SqlRowSet results) {
+		Accounts theAccount = new Accounts();
+		theAccount.setAccountId(results.getInt("account_id"));
+		theAccount.setBalance(results.getBigDecimal("balance"));
+		theAccount.setUserId(results.getInt("user_id"));
+		
 		return theAccount;
 	}
 
