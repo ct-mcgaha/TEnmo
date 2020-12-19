@@ -31,7 +31,7 @@ public class JdbcTransfersDaoTest {
 	@BeforeClass
 	public static void setupDataSource() {
 		dataSource = new SingleConnectionDataSource();
-		dataSource.setUrl("jdbc:postgresql://localhost:8080/transfers");
+		dataSource.setUrl("jdbc:postgresql://localhost:8080/tenmo");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
 		dataSource.setAutoCommit(false);
@@ -44,7 +44,7 @@ public class JdbcTransfersDaoTest {
 	
 	@Before
 	public void setup() {
-		dao = JdbcTransfersDao(dataSource);
+		dao = new JdbcTransfersDao(dataSource);
 	}
 
 	@After
@@ -60,7 +60,7 @@ public class JdbcTransfersDaoTest {
 		List<Transfers> transfers3  = dao.getTransfers();
 		
 		assertNotNull(transfers3);
-		assertEquals();
+		//assertEquals();
 	}
 	
 	private Transfers getTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal amount) {
