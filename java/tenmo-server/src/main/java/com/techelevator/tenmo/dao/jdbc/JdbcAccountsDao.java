@@ -51,19 +51,32 @@ public class JdbcAccountsDao implements AccountsDao {
 		BigDecimal account = oneAccount.getBalance();
 		return account;
 	}
-
-	@Override
-	public Accounts updateAccount(Accounts account, long accountId) {
-		String updateAccount = "UPDATE accounts SET balance = ?, user_id = ? WHERE account_id = ?";
-		jdbcTemplate.update(updateAccount, account.getBalance(), account.getUserId(), accountId);
-		// TODO Auto-generated method stub
-		return account;
-	}
 	
-	public void deleteAccount(long accountId) {
-		String sql = "DELETE FROM accounts WHERE account_id = ?";
-		jdbcTemplate.update(sql, accountId);
-	}
+	@Override
+	public Accounts getAccount(long accountId) {
+		Accounts oneAccount = new Accounts();
+		String sqlgetOneAccount = "SELECT * FROM accounts WHERE account_id = ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlgetOneAccount, accountId);
+		
+		if (results.next()) {
+			oneAccount = mapRowToAccounts(results);
+		}
+		// TODO Auto-generated method stub
+		return oneAccount;
+	} 
+
+//	@Override
+//	public Accounts updateAccount(Accounts account, long accountId) {
+//		String updateAccount = "UPDATE accounts SET balance = ?, user_id = ? WHERE account_id = ?";
+//		jdbcTemplate.update(updateAccount, account.getBalance(), account.getUserId(), accountId);
+//		
+//		return account;
+//	}
+//	
+//	public void deleteAccount(long accountId) {
+//		String sql = "DELETE FROM accounts WHERE account_id = ?";
+//		jdbcTemplate.update(sql, accountId);
+//	}
 	
 	/*
 	 *  This is a method that updates the SENDER'S account...
@@ -84,21 +97,17 @@ public class JdbcAccountsDao implements AccountsDao {
 		jdbcTemplate.update(sendBucks, getAccountBalance(receiverId).add(amount), receiverId);
 	}
 
+	@Override
+	public Accounts createAccount(Accounts newAccount) {
+		String createAccount = "INSERT INTO accounts(account_id, balance, user_id) VALUES (?,?,?)";
+		
+		Long id = getNextAccountId();
+		newAccount.setAccountId(id);
+		
+		jdbcTemplate.update(createAccount, newAccount.getAccountId(), newAccount.getBalance(), newAccount.getUserId());
+		return newAccount;
+	}
 	
-	/*
-	 * 	This is a method that updates the RECEIVER'S account...
-	 *  It ADDS whatever the transfer amount is TO the balance.
-	 *  I think we need to find a way for it intake "amount" from Transfers.java
-	 */
-//	@Override
-//	public Accounts updateReceiver(Accounts account, int accountId) {
-//		String receiveBucks = sqlJoinReceiver + "UPDATE accounts"+
-//				"SET balance = (balance - transfers.amount)" + 
-//				"FROM transfers" + 
-//				"WHERE transfers.transfer_id = ?";
-//		jdbcTemplate.update(receiveBucks, account.getBalance(), account.getUserId(), accountId);
-//		return account;
-//	}
 	
 	@Override
 	public Accounts getAccountByTransferId(long transferId) {
@@ -111,7 +120,7 @@ public class JdbcAccountsDao implements AccountsDao {
 			transIdAccount = mapRowToAccounts(results);
 		}
 		return transIdAccount;
-	}
+	}  
 	
 	private Accounts mapRowToAccounts(SqlRowSet results) {
 		Accounts theAccount = new Accounts();
@@ -122,5 +131,14 @@ public class JdbcAccountsDao implements AccountsDao {
 		return theAccount;
 	}
 
+	
+	private Long getNextAccountId() {
+		SqlRowSet nextIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('seq_account_id')");
+		
+		if (nextIdResult.next()) {
+			return nextIdResult.getLong(1);
+		}
+		throw new RuntimeException("Error!");
+	}
 
 }

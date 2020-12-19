@@ -33,7 +33,7 @@ public class TenmoController {
 		this.accountsDao = accountsDao;
 		this.transfersDao = transfersDao;
 		this.userDao = userDao;
-	}
+	} 
 
 //	@RequestMapping(path = "/transfers", method = RequestMethod.GET)
 //	public List<Transfers> getTransfers(@PathVariable Long accountFrom, @PathVariable Long accountTo) {
@@ -50,19 +50,19 @@ public class TenmoController {
 		return accountsDao.getAccountBalance(id);
 	}
 
-	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.PUT)
-	public Accounts update(@Valid @RequestBody Accounts updatedAccount, @PathVariable int id) {
-		return accountsDao.updateAccount(updatedAccount, id);
-	}
-	
-	@PreAuthorize("hasRole('ADMIN')")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.DELETE)
-	public void delete(@PathVariable long id) {
-		if (accountsDao.getAccountBalance(id) != null) {
-		accountsDao.deleteAccount(id);
-		}
-	}
+//	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.PUT)
+//	public Accounts update(@Valid @RequestBody Accounts updatedAccount, @PathVariable int id) {
+//		return accountsDao.updateAccount(updatedAccount, id);
+//	}
+//	
+//	@PreAuthorize("hasRole('ADMIN')")
+//	@ResponseStatus(HttpStatus.NO_CONTENT)
+//	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.DELETE)
+//	public void delete(@PathVariable long id) {
+//		if (accountsDao.getAccountBalance(id) != null) {
+//		accountsDao.deleteAccount(id);
+//		}
+//	}
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(path = "/transfers/send", method = RequestMethod.POST)

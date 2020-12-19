@@ -21,7 +21,7 @@ public class Accounts {
 		this.accountId = accountId;
 		this.userId = userId;
 		this.balance = balance;
-	}
+	} 
 
 	public long getAccountId() {
 		return accountId;

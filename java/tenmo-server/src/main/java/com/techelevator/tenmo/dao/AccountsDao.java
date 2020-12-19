@@ -13,7 +13,7 @@ public interface AccountsDao {
 	
 //	List<Accounts> findUser(int userId);
 	
-	Accounts updateAccount(Accounts account, long accountId);
+//	Accounts updateAccount(Accounts account, long accountId);
 	
 	Accounts getAccountByTransferId(long transferId);
 
@@ -21,6 +21,10 @@ public interface AccountsDao {
 
 	void updateReceiver(BigDecimal transferAmount, long receiverId);
 	
-	void deleteAccount(long accountId);
+//	void deleteAccount(long accountId);
+
+	Accounts createAccount(Accounts newAccount);
+
+	Accounts getAccount(long accountId);
 	
 }

@@ -2,23 +2,22 @@ package com.techelevator.tenmo.dao.jdbc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-
-import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+
 
 import com.techelevator.tenmo.model.Accounts;
-import com.techelevator.tenmo.model.Transfers;
 
 
 
@@ -30,7 +29,7 @@ public class JdbcAccountsDaoTest {
 	@BeforeClass
 	public static void setupDataSource() {
 		dataSource = new SingleConnectionDataSource();
-		dataSource.setUrl("jdbc:postgresql://localhost:8080/accounts");
+		dataSource.setUrl("jdbc:postgresql://localhost:5432/tenmo");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
 		dataSource.setAutoCommit(false);
@@ -43,6 +42,9 @@ public class JdbcAccountsDaoTest {
 	
 	@Before
 	public void setup() {
+//		String sqlCreateTestAccount = "INSERT INTO accounts (account_id, balance, user_id) VALUES (?,?,?)";
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+//		jdbcTemplate.update(sqlCreateTestAccount, 4, 999, 1);
 		dao = new JdbcAccountsDao(dataSource);
 	}
 
@@ -52,11 +54,85 @@ public class JdbcAccountsDaoTest {
 	}
 
 	@Test
-	public void get_account_by_id() {
-		Accounts user3 = dao.getAccountByTransferId(9);
+	public void get_account_balance_by_id() {
+		Accounts theAccount = new Accounts();
+		String sqlgetOneAccount = "SELECT * FROM accounts WHERE account_id = ?";
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlgetOneAccount, 2);
 		
-		assertNotNull(user3);
-		assertEquals(user3.getAccountId(), 3);
+		if (results.next()) {
+			theAccount = mapRowToAccounts(results);
+		}
+		BigDecimal account = dao.getAccountBalance(2);
+		assertTrue(theAccount.getBalance().equals(account));
+
+		
+		
+//		Accounts user3 = dao.getAccountByTransferId(9);
+//		
+//		assertNotNull(user3);
+//		assertEquals(user3.getAccountId(), 3);
+	}
+	
+	@Test
+	public void create_account() {
+		
+		BigDecimal originalBalance = new BigDecimal(100);
+		BigDecimal newBalance = new BigDecimal(1000);
+		
+		Accounts theAccount = new Accounts((long)1, (long)1, originalBalance);
+		theAccount.setBalance(originalBalance);
+		Accounts savedBalance = dao.createAccount(theAccount);
+		
+		Long accountId = savedBalance.getAccountId();
+		dao.getAccount(accountId);
+		Accounts updatedAccount = dao.getAccount(accountId);
+		
+		assertNotNull(updatedAccount);
+		assertEquals(originalBalance, originalBalance);
+		
+		
+		
+//		Accounts theAccount = new Accounts( (long)1, (long)2, BigDecimal.valueOf(1000));
+//		String updateAccount = "UPDATE accounts SET balance = ?, user_id = ? WHERE account_id = ?";
+//		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+//		jdbcTemplate.update(updateAccount, (long)1, (long)2, BigDecimal.valueOf(100));
+		
+		
+	}
+	
+	@Test
+	public void get_account__by_transfer_id() {
+		Accounts theAccount = new Accounts();
+		String sql = "SELECT account_from, account_to FROM transfers WHERE transfer_id = ?";
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sql, 3);
+		if (results.next()) {
+			theAccount = mapRowToAccounts(results);
+		}
+		Accounts newAccount = dao.getAccountByTransferId(3);
+		
+		assertEquals(theAccount.getAccountId(), newAccount.getAccountId());
+		
+		
+		
+		
+//		Accounts theAccount = new Accounts();
+//		String sqlgetOneAccount = "SELECT * FROM accounts WHERE account_id = ?";
+//		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+//		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlgetOneAccount, 2);
+//		
+//		if (results.next()) {
+//			theAccount = mapRowToAccounts(results);
+//		}
+//		assertTrue(theAccount.getBalance().equals(account));
+
+		
+		
+//		Accounts user3 = dao.getAccountByTransferId(9);
+//		
+//		assertNotNull(user3);
+//		assertEquals(user3.getAccountId(), 3);
 	}
 	
 	private Accounts getAccount(long accountId, BigDecimal balance, long userId) {
@@ -64,6 +140,15 @@ public class JdbcAccountsDaoTest {
 		theAccount.setAccountId(accountId);
 		theAccount.setBalance(balance);
 		theAccount.setUserId(userId);
+		return theAccount;
+	}
+	
+	private Accounts mapRowToAccounts(SqlRowSet results) {
+		Accounts theAccount = new Accounts();
+		theAccount.setAccountId(results.getInt("account_id"));
+		theAccount.setBalance(results.getBigDecimal("balance"));
+		theAccount.setUserId(results.getInt("user_id"));
+		
 		return theAccount;
 	}
 
