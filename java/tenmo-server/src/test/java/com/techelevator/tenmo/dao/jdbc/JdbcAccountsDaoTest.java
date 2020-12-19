@@ -90,15 +90,6 @@ public class JdbcAccountsDaoTest {
 		
 		assertNotNull(updatedAccount);
 		assertEquals(originalBalance, originalBalance);
-		
-		
-		
-//		Accounts theAccount = new Accounts( (long)1, (long)2, BigDecimal.valueOf(1000));
-//		String updateAccount = "UPDATE accounts SET balance = ?, user_id = ? WHERE account_id = ?";
-//		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-//		jdbcTemplate.update(updateAccount, (long)1, (long)2, BigDecimal.valueOf(100));
-		
-		
 	}
 	
 	@Test
@@ -113,26 +104,6 @@ public class JdbcAccountsDaoTest {
 		Accounts newAccount = dao.getAccountByTransferId(3);
 		
 		assertEquals(theAccount.getAccountId(), newAccount.getAccountId());
-		
-		
-		
-		
-//		Accounts theAccount = new Accounts();
-//		String sqlgetOneAccount = "SELECT * FROM accounts WHERE account_id = ?";
-//		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-//		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlgetOneAccount, 2);
-//		
-//		if (results.next()) {
-//			theAccount = mapRowToAccounts(results);
-//		}
-//		assertTrue(theAccount.getBalance().equals(account));
-
-		
-		
-//		Accounts user3 = dao.getAccountByTransferId(9);
-//		
-//		assertNotNull(user3);
-//		assertEquals(user3.getAccountId(), 3);
 	}
 	
 	private Accounts getAccount(long accountId, BigDecimal balance, long userId) {

@@ -40,7 +40,7 @@ public class JdbcTransfersDaoTest {
 	@AfterClass
 	public static void closeDataSource() throws SQLException {
 		dataSource.destroy();
-	}
+	} 
 	
 	@Before
 	public void setup() {
