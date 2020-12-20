@@ -148,8 +148,10 @@ public class App {
 				if (amount.compareTo(balance) == 1) {
 					System.out.println("Not enough funds");
 				}
-				System.out.println("Current Balance: " + balance);
+				System.out.println("Approved!");
+				System.out.println("Your Current Balance: " + balance);
 				sendAmount = true;
+				return;
 			} 
 			if (amount.compareTo(BigDecimal.ZERO) == 0) {
 				System.out.println("Enter value above 0");
