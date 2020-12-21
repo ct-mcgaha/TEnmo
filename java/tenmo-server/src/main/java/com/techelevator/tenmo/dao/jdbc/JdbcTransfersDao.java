@@ -36,18 +36,6 @@ public class JdbcTransfersDao implements TransfersDao{
 		return allTransfers;
 	}
 	
-	@Override
-	public List<Transfers> getTransferForUser(long id) {
-		List<Transfers> allTransfersByUser = new ArrayList<>();
-		String sqlTransfersForUser = "SELECT * FROM transfers JOIN accounts ON transfers.account_to = accounts.account_id JOIN users ON accounts.user_id = users.user_id WHERE transfers.account_from = ? OR transfers.account_to = ?";
-		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlTransfersForUser, id, id);
-		
-		while (results.next()) {
-			Transfers allTransfers = mapRowToTransfers(results);
-			allTransfersByUser.add(allTransfers);
-		}
-		return allTransfersByUser; 
-	} 
 
 	@Override
 	public Transfers getOne(long transferId) {
@@ -59,6 +47,19 @@ public class JdbcTransfersDao implements TransfersDao{
 			oneTransfer = mapRowToTransfers(results);
 		}
 		return oneTransfer;
+	} 
+	
+	@Override
+	public List<Transfers> getTransferForUser(long id) {
+		List<Transfers> allTransfersByUser = new ArrayList<>();
+		String sqlTransfersForUser = "SELECT * FROM transfers JOIN accounts ON transfers.account_to = accounts.account_id JOIN users ON accounts.user_id = users.user_id WHERE transfers.account_from = ? OR transfers.account_to = ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlTransfersForUser, id, id);
+		
+		while (results.next()) {
+			Transfers allTransfers = mapRowToTransfers(results);
+			allTransfersByUser.add(allTransfers);
+		}
+		return allTransfersByUser; 
 	} 
 	
 	@Override

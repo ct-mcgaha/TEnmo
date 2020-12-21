@@ -8,11 +8,6 @@ import org.junit.jupiter.api.Test;
 
 public class TransfersTest {
 
-	@Test
-	public void get_everything() {		
-		Transfers newTransfer = new Transfers((long)2, (long)3, (long)2, (long)2, (long)1, BigDecimal.valueOf(1000));
-		assertEquals(newTransfer.getTransferId(), newTransfer.getTransferTypeId(), newTransfer.getTransferStatusId(), newTransfer.getAccountFrom(), newTransfer.getAccountTo(), newTransfer.getAmount());
-	}
 	
 	@Test void set_everything() {
 		Transfers newTransfer = new Transfers((long)2, (long)3, (long)2, (long)2, (long)1, BigDecimal.valueOf(1000));
@@ -22,6 +17,12 @@ public class TransfersTest {
 		newTransfer.setAccountFrom((long) 2);
 		newTransfer.setAccountTo((long) 1);
 		newTransfer.setAmount(BigDecimal.valueOf(100));
+		assertEquals(newTransfer.getTransferId(), newTransfer.getTransferTypeId(), newTransfer.getTransferStatusId(), newTransfer.getAccountFrom(), newTransfer.getAccountTo(), newTransfer.getAmount());
+	}
+	
+	@Test
+	public void get_everything() {		
+		Transfers newTransfer = new Transfers((long)2, (long)3, (long)2, (long)2, (long)1, BigDecimal.valueOf(1000));
 		assertEquals(newTransfer.getTransferId(), newTransfer.getTransferTypeId(), newTransfer.getTransferStatusId(), newTransfer.getAccountFrom(), newTransfer.getAccountTo(), newTransfer.getAmount());
 	}
 

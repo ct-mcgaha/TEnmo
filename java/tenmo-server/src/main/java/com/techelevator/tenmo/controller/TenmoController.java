@@ -35,10 +35,6 @@ public class TenmoController {
 		this.userDao = userDao;
 	}  
 
-//	@RequestMapping(path = "/transfers", method = RequestMethod.GET)
-//	public List<Transfers> getTransfers(@PathVariable Long accountFrom, @PathVariable Long accountTo) {
-//		return transfersDao.getTransfers(accountFrom, accountTo);
-//	}
 
 	@RequestMapping(path = "/accounts", method = RequestMethod.GET)
 	public List<Accounts> listAccounts() {
@@ -50,12 +46,7 @@ public class TenmoController {
 		return accountsDao.getAccountBalance(id);
 	}
 
-//	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.PUT)
-//	public Accounts update(@Valid @RequestBody Accounts updatedAccount, @PathVariable int id) {
-//		return accountsDao.updateAccount(updatedAccount, id);
-//	}
-//	
-//	@PreAuthorize("hasRole('ADMIN')")
+
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable long id) {
@@ -106,9 +97,11 @@ public class TenmoController {
 	}
 	
 	
-	
-	
-
+//	@RequestMapping(path = "/accounts/{id}", method = RequestMethod.PUT)
+//	public Accounts update(@Valid @RequestBody Accounts updatedAccount, @PathVariable int id) {
+//		return accountsDao.updateAccount(updatedAccount, id);
+//	}
+//	
 //	@RequestMapping(path = "/transfers", method = RequestMethod.PUT)
 //	public Accounts sendBucks(@RequestBody Accounts sender, @PathVariable int id) {
 //		return accountsDao.updateSender(sender, id);
@@ -129,6 +122,10 @@ public class TenmoController {
 //	public User getOne(@PathVariable long id) {
 //		User aUser = userDao.findByUserId(id);
 //		return aUser;
+//	}
+//	@RequestMapping(path = "/transfers", method = RequestMethod.GET)
+//	public List<Transfers> getTransfers(@PathVariable Long accountFrom, @PathVariable Long accountTo) {
+//		return transfersDao.getTransfers(accountFrom, accountTo);
 //	}
 
 }

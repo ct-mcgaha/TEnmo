@@ -39,6 +39,20 @@ public class TransfersService {
 		return transfer;
 	}
 	
+	public Transfers viewSingleTransfer(long id, String authToken) {
+		Transfers transfer = null;
+		AUTH_TOKEN = authToken;
+		HttpEntity<?> entity = makeAuthEntity();
+		try {
+			transfer = restTemplate.exchange(BASE_URL + "/transfers" + id, HttpMethod.GET, entity, Transfers.class).getBody();
+		} catch (RestClientResponseException ex) {
+		      System.out.println(ex.getRawStatusCode() + " : " + ex.getStatusText());
+	    } catch (ResourceAccessException ex) {
+	    	System.out.println(ex.getMessage());
+	    }
+		return transfer;
+	}
+	
 	public Transfers sendTransfer(long transferTypeId, long transferStatusId, long accountFrom, long accountTo, BigDecimal amount, String authToken) {
 		AUTH_TOKEN = authToken;
 		Transfers transfer = new Transfers();

@@ -76,6 +76,22 @@ public class ConsoleService {
 		
 	}
 	
+	public Long getUserInputLong(String prompt) {
+		Long result = null;
+		do {
+			out.print(prompt+": ");
+			out.flush();
+			String userInput = in.nextLine();
+			try {
+				result = Long.parseLong(userInput);
+			} catch(NumberFormatException e) {
+				out.println("\n*** " + userInput + " is not valid ***\n");
+			}
+		} while(result == null);
+		return result;
+		
+	}
+	
 	public BigDecimal getUserBigDecimal(String prompt) {
 		BigDecimal result = null;
 		Double amount = 0.0;

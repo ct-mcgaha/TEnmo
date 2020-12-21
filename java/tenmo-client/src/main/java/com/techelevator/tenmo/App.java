@@ -26,13 +26,15 @@ public class App {
 	private static final String MAIN_MENU_OPTION_VIEW_BALANCE = "View your current balance";
 	private static final String MAIN_MENU_OPTION_SEND_BUCKS = "Send TE bucks";
 	private static final String MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS = "View your past transfers";
+	private static final String MAIN_MENU_OPTION_VIEW_SINGLE_TRANSFER = "View a single transfer";
 	private static final String MAIN_MENU_OPTION_REQUEST_BUCKS = "Request TE bucks";
 	private static final String MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS = "View your pending requests";
 	private static final String MAIN_MENU_OPTION_LOGIN = "Login as different user";
 	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS,
-			MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS,
+			MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_VIEW_SINGLE_TRANSFER, MAIN_MENU_OPTION_REQUEST_BUCKS,
 			MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
-	private static final String SEND_MENU_OPTION_CHOOSE_RECEIVER = "Enter the ID of the User you'd like to send";
+	private static final String SEND_MENU_OPTION_CHOOSE_RECEIVER = "Enter the ID of the User you'd like to send (Press 0 to exit)";
+	private static final String SEND_MENU_OPTION_CHOOSE_TRANSFER_ID = "Enter the ID of the transfer you'd like to see (Press 0 to exit)";
 	private static final String SEND_MENU_OPTION_CHOOSE_AMOUNT = "Enter amount";
 
 	private AuthenticatedUser currentUser;
@@ -73,7 +75,10 @@ public class App {
 				viewCurrentBalance();
 			} else if (MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS.equals(choice)) {
 				viewTransferHistory();
-			} else if (MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS.equals(choice)) {
+			} else if (MAIN_MENU_OPTION_VIEW_SINGLE_TRANSFER.equals(choice)) {
+				viewSingleTransfer();
+			}
+			else if (MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS.equals(choice)) {
 				viewPendingRequests();
 			} else if (MAIN_MENU_OPTION_SEND_BUCKS.equals(choice)) {
 				sendBucks();
@@ -88,9 +93,10 @@ public class App {
 		}
 	}
 
+
 	private void viewCurrentBalance() {
-		BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId(), currentUser.getToken());
-		System.out.println("Your current account balance is : " + balance);
+		BigDecimal userBalance = accountsService.getAccountBalance(currentUser.getUser().getId(), currentUser.getToken());
+		System.out.println("Your current account balance is : $" + userBalance);
 	}
 
 	@SuppressWarnings("unlikely-arg-type")
@@ -106,6 +112,37 @@ public class App {
 		}
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
+	private void viewSingleTransfer() {
+		Transfers[] transferHistory = transfersService.viewTransferHistory(currentUser.getUser().getId(), currentUser.getToken());
+		for (int i = 0; i < transferHistory.length; i++) {
+			System.out.println(transferHistory[i].getTransferId());
+		}
+		boolean choice = false;
+		Long nameId = null;
+		while (choice == false) {
+			nameId = (Long) console.getUserInputLong(SEND_MENU_OPTION_CHOOSE_TRANSFER_ID);
+			if (nameId == 0) {
+				choice = true;
+				return;
+			}
+			else {
+				for (int i = 0; i < transferHistory.length; i++) {
+					if (transferHistory[i].getTransferId().equals(nameId)) {
+						choice = true;
+						String transferTypeId = "Send";
+						String transferStatusId = "Approved";
+						System.out.printf("%-5d %-15s %-7s %-1s %-10s %-1s %-1s\n", transferHistory[i].getTransferId(),
+								"From: " + userService.getUserById(transferHistory[i].getAccountFrom(), currentUser.getToken()).getUsername(), "To: " + userService.getUserById(transferHistory[i].getAccountTo(), currentUser.getToken()).getUsername(),
+								"  Type: " + transferTypeId, "  Status: " + transferStatusId, "  $", transferHistory[i].getAmount());
+					}
+				}
+				if (choice == false) {
+					System.out.println("Not a valid choice. Choose again");
+				}
+			}
+		}
+	}
 
 	private void viewPendingRequests() {
 	}
@@ -144,12 +181,14 @@ public class App {
 				long transferStatusId = 2;
 				transfersService.sendTransfer(transferTypeId, transferStatusId, currentUser.getUser().getId(), nameId,
 						amount, currentUser.getToken());
-				BigDecimal balance = accountsService.getAccountBalance(currentUser.getUser().getId(), currentUser.getToken());
-				if (amount.compareTo(balance) == 1) {
+				BigDecimal userBalance = accountsService.getAccountBalance(currentUser.getUser().getId(), currentUser.getToken());
+				if (amount.compareTo(userBalance) == 1) {
 					System.out.println("Not enough funds");
+					System.out.println("Your Current Balance: $" + userBalance);
+					return;
 				}
 				System.out.println("Approved!");
-				System.out.println("Your Current Balance: " + balance);
+				System.out.println("Your Current Balance: $" + userBalance);
 				sendAmount = true;
 				return;
 			} 
